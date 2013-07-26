@@ -19,3 +19,9 @@
     (> x (:value tree)) (make-tree (:left tree) (:value tree) (insert (:right tree) x))
     :equal tree
     ))
+
+(defprotocol Set
+  (is-empty? [this])
+  (member? [this value])
+  (insert [this value]))
+
