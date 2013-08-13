@@ -19,3 +19,4 @@
     (> x (:value tree)) (make-tree (:left tree) (:value tree) (insert (:right tree) x))
     :equal tree
     ))
+
