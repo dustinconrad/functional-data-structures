@@ -24,3 +24,8 @@
                new (rand-int 200)]
            (is (= (update % index new) (assoc % index new)))))
       doall)))
+
+(deftest test-suffixes
+  (testing "suffixes"
+    (is (= (suffixes [1 2 3 4])
+          [[1 2 3 4] [2 3 4] [3 4] [4] []]))))

@@ -10,3 +10,8 @@
     (empty? lst) (throw (IndexOutOfBoundsException.))
     (zero? i) (cons y (rest lst))
     :else (cons (first lst) (update (rest lst) (dec i) y))))
+
+(defn suffixes [xs]
+  (if (empty? xs)
+    [xs]
+    (cons xs (suffixes (rest xs)))))
