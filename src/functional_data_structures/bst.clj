@@ -28,3 +28,23 @@
 
 (defn smart-member? [tree x]
   (smart-member-helper tree x nil))
+
+(defn make-finite-map
+  ([key value] (make-finite-map nil key value nil))
+  ([left key value right]
+    {:left left :key key :value value :right right}))
+
+(defn lookup [f-map key]
+  (cond
+    (empty? f-map) false
+    (< key (:key f-map)) (recur (:left f-map) key)
+    (> key (:key f-map)) (recur (:right f-map) key)
+    :equal (:value f-map)))
+
+(defn bind [f-map key value]
+  (cond
+    (empty? f-map) (make-finite-map key value)
+    (< key (:key f-map)) (make-finite-map (bind (:left f-map) key value) (:key f-map) (:value f-map) (:right f-map))
+    (> key (:key f-map)) (make-finite-map (:left f-map) (:key f-map) (:value f-map) (bind (:right f-map) key value))
+    :equal (make-finite-map (:left f-map) key value (:right f-map))
+    ))

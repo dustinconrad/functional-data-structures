@@ -79,12 +79,24 @@
       (map
         (fn [i]
           (let [test-tree (reduce #(insert % %2) nil (shuffle (range i)))]
-            (do
-              (doall
-                (map
-                  #(is (smart-member? test-tree %))
-                  (range i)))
-              (is (not (smart-member? test-tree -10)))
-              (is (not (smart-member? test-tree (inc i))))
-              ))))
+            (doall
+              (map
+                #(is (smart-member? test-tree %))
+                (range i)))
+            (is (not (smart-member? test-tree -10)))
+            (is (not (smart-member? test-tree (inc i))))
+            )))
       doall)))
+
+(deftest bind-lookup
+  (testing "bind and lookup"
+    (let [keys    [5 3 9 7    1]
+          values  [1 3 5 100 200]
+          pairs (map vector keys values)
+          answers (into {} pairs)
+          f-map (reduce (fn [acc [l r]] (bind acc l r)) nil pairs)]
+      (->>
+        (map
+          #(is (= (lookup f-map %) (answers %)))
+          keys)
+        doall))))
