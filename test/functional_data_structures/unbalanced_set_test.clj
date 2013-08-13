@@ -21,6 +21,16 @@
       (is (not (.is-member? two-level -1))))
     ))
 
+(deftest test-insert
+  (testing "one"
+    (is (= (.insert (unbalanced-set) 1) (unbalanced-set 1))))
+  (testing "multiple inserts"
+    (is (= (-> (unbalanced-set) (.insert 3) (.insert 1)) (unbalanced-set (unbalanced-set 1) 3 (unbalanced-set))))
+    (is (= (-> (unbalanced-set) (.insert 3) (.insert 1) (.insert 4)) (unbalanced-set (unbalanced-set 1) 3 (unbalanced-set 4))))
+    (is (= (-> (unbalanced-set) (.insert 1) (.insert 2) (.insert 4)) (unbalanced-set (unbalanced-set) 1 (unbalanced-set (unbalanced-set) 2 (unbalanced-set 4)))))
+    (is (= (-> (unbalanced-set) (.insert 1) (.insert 3) (.insert 2)) (unbalanced-set (unbalanced-set) 1 (unbalanced-set (unbalanced-set 2) 3 (unbalanced-set)))))
+    ))
+
 (deftest test-insert-member?
   (testing "one level"
     (let [one-level (-> (unbalanced-set) (.insert 1))]
