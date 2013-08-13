@@ -99,4 +99,7 @@
         (map
           #(is (= (lookup f-map %) (answers %)))
           keys)
-        doall))))
+        doall)
+      (is (thrown-with-msg? Exception #"NotFound" (lookup f-map -1)))
+      (is (thrown-with-msg? Exception #"NotFound" (lookup f-map 2)))
+      )))

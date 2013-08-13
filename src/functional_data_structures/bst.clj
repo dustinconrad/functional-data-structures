@@ -36,7 +36,7 @@
 
 (defn lookup [f-map key]
   (cond
-    (empty? f-map) false
+    (empty? f-map) (throw (Exception. "NotFound"))
     (< key (:key f-map)) (recur (:left f-map) key)
     (> key (:key f-map)) (recur (:right f-map) key)
     :equal (:value f-map)))
