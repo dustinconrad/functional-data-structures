@@ -57,7 +57,7 @@
           (let [test-tree (reduce #(.insert % %2) (unbalanced-set) (shuffle (range i)))]
             (->>
               (map
-                #(is (= (.is-member? test-tree %) true))
+                #(is (.is-member? test-tree %) true)
                 (range i))
               doall))))
       doall)

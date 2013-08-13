@@ -20,3 +20,11 @@
     :equal tree
     ))
 
+(defn- smart-member-helper [tree x max]
+  (cond
+    (empty? tree) (= x max)
+    (<= x (:value tree)) (recur (:left tree) x (:value tree))
+    :default (recur (:right tree) x max)))
+
+(defn smart-member? [tree x]
+  (smart-member-helper tree x nil))
