@@ -9,7 +9,8 @@
   ([] (unbalanced-set nil nil nil))
   ([val] (unbalanced-set (unbalanced-set) val (unbalanced-set)))
   ([left val right]
-    (reify Set
+    (reify
+      Set
       (is-empty? [_] (nil? val))
       (is-member? [this x]
         (cond

@@ -21,7 +21,6 @@
       (is (not (.is-member? two-level -1))))
     ))
 
-
 (deftest test-insert-member?
   (testing "one level"
     (let [one-level (-> (unbalanced-set) (.insert 1))]
