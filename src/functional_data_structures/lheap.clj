@@ -42,3 +42,13 @@
 (defn delete-min [lheap]
   {:pre [((complement empty?) lheap)]}
   (merge-lheap (:left lheap) (:right lheap)))
+
+(defn lheap-from-seq [seq]
+  (let [heaps (map make-lheap seq)]
+    (loop [hs heaps]
+      (if (= (count hs) 1)
+        (first hs)
+        (recur
+          (map
+            (fn [[l r]] (merge-lheap l r))
+            (partition 2 2 [nil] hs)))))))

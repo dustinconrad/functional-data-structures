@@ -159,3 +159,27 @@
             )))
       doall))
   )
+
+(deftest test-find-min-from-seq
+  (testing "find min of rank 1 leftist heap"
+    (let [lheap (lheap-from-seq [1])]
+      (is (= (find-min lheap) 1))))
+  (testing "find min of leftist heap"
+    (let [lheap (lheap-from-seq [1 2])]
+      (is (= (find-min lheap) 1)))
+    (let [lheap (lheap-from-seq [0 1])]
+      (is (= (find-min lheap) 0)))
+    )
+  (testing "multiple inserts and find min"
+    (->>
+      (repeatedly 10 (fn [] (repeatedly 10 #(- 5000 (rand-int 10000)))))
+      (map
+        (fn [c]
+          (->> c
+            (reduce
+              smart-insert
+              nil)
+            (#(is (= (apply min c) (find-min %))))
+            )))
+      doall))
+  )
