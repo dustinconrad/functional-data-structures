@@ -26,6 +26,15 @@
 (defn insert [lheap x]
   (merge-lheap lheap (make-lheap x)))
 
+(defn smart-insert [lheap x]
+  (cond
+    (empty? lheap) (make-lheap x)
+    (< x (:value lheap)) (smart-insert (make-lheap x (:left lheap) (:right lheap)) (:value lheap))
+    (< (rank (:right lheap)) (rank (:left lheap))) (make-lheap (:value lheap) (:left lheap) (smart-insert (:right lheap) x))
+    :default (make-lheap (:value lheap) (smart-insert (:left lheap) x) (:right lheap))
+    )
+  )
+
 (defn find-min [lheap]
   {:pre [((complement empty?) lheap)]}
   (:value lheap))

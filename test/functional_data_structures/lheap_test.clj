@@ -35,6 +35,23 @@
     )
   )
 
+(deftest test-smart-insert
+  (testing "smart insert into empty leftist heap"
+    (let [expected (make-lheap 1)
+          actual (smart-insert nil 1)]
+      (is (= actual expected))))
+  (testing "smart insert into rank 1 leftist heap"
+    (let [one-level (make-lheap 1)
+          expected (make-lheap 1 (make-lheap 2) nil)
+          actual (smart-insert one-level 2)]
+      (is (= actual expected)))
+    (let [one-level (make-lheap 1)
+          expected (make-lheap 0 (make-lheap 1) nil)
+          actual (smart-insert one-level 0)]
+      (is (= actual expected)))
+    )
+  )
+
 (deftest test-find-min
   (testing "find min of rank 1 leftist heap"
     (let [lheap (insert nil 1)]
@@ -55,6 +72,30 @@
           (->> c
             (reduce
               insert
+              nil)
+            (#(is (= (apply min c) (find-min %))))
+            )))
+      doall))
+  )
+
+(deftest test-find-min-smart-insert
+  (testing "find min of rank 1 leftist heap"
+    (let [lheap (smart-insert nil 1)]
+      (is (= (find-min lheap) 1))))
+  (testing "find min of leftist heap"
+    (let [lheap (-> nil (smart-insert 1) (smart-insert 2))]
+      (is (= (find-min lheap) 1)))
+    (let [lheap (-> nil (smart-insert 1) (smart-insert 0))]
+      (is (= (find-min lheap) 0)))
+    )
+  (testing "multiple inserts and find min"
+    (->>
+      (repeatedly 10 (fn [] (repeatedly 10 #(- 5000 (rand-int 10000)))))
+      (map
+        (fn [c]
+          (->> c
+            (reduce
+              smart-insert
               nil)
             (#(is (= (apply min c) (find-min %))))
             )))
@@ -85,6 +126,34 @@
           (->> c
             (reduce
               insert
+              nil)
+            (#(is (not= (apply min c) (find-min (delete-min %)))))
+            )))
+      doall))
+  )
+
+(deftest test-delete-min-smart-insert
+  (testing "delete min of rank 1 leftist heap"
+    (let [lheap (smart-insert nil 1)
+          actual (delete-min lheap)
+          expected nil]
+      (is (= actual expected))))
+  (testing "delete min of leftist heap"
+    (let [lheap (-> nil (smart-insert 1) (smart-insert 2))
+          old-min (find-min lheap)]
+      (is (not= old-min (find-min (delete-min lheap)))))
+    (let [lheap (-> nil (smart-insert 1) (smart-insert 0))
+          old-min (find-min lheap)]
+      (is (not= old-min (find-min (delete-min lheap)))))
+    )
+  (testing "multiple inserts and find/delete min"
+    (->>
+      (repeatedly 10 (fn [] (repeatedly 10 #(- 5000 (rand-int 10000)))))
+      (map
+        (fn [c]
+          (->> c
+            (reduce
+              smart-insert
               nil)
             (#(is (not= (apply min c) (find-min (delete-min %)))))
             )))
