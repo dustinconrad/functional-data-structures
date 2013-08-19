@@ -5,11 +5,11 @@
     ys
     (cons (first xs) (++ (rest xs) ys))))
 
-(defn update [lst i y]
+(defn update [[x & xs :as lst] i y]
   (cond
     (empty? lst) (throw (IndexOutOfBoundsException.))
-    (zero? i) (cons y (rest lst))
-    :else (cons (first lst) (update (rest lst) (dec i) y))))
+    (zero? i) (cons y xs)
+    :else (cons x (update xs (dec i) y))))
 
 (defn suffixes [xs]
   (if (empty? xs)

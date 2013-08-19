@@ -5,22 +5,22 @@
   ([left value right]
     {:left left :value value :right right}))
 
-(defn member? [tree x]
+(defn member? [{left :left value :value right :right :as tree} x]
   (cond
     (empty? tree) false
-    (< x (:value tree)) (recur (:left tree) x)
-    (> x (:value tree)) (recur (:right tree) x)
+    (< x value) (recur left x)
+    (> x value) (recur right x)
     :equal true))
 
-(defn insert [tree x]
+(defn insert [{left :left value :value right :right :as tree} x]
   (cond
     (empty? tree) (make-tree x)
-    (< x (:value tree)) (make-tree (insert (:left tree) x) (:value tree) (:right tree))
-    (> x (:value tree)) (make-tree (:left tree) (:value tree) (insert (:right tree) x))
+    (< x value) (make-tree (insert left x) value right)
+    (> x value) (make-tree left value (insert right x))
     :equal tree
     ))
 
-(defn- smart-member-helper [tree x max]
+(defn- smart-member-helper [{left :left value :value right :right :as tree} x max]
   (cond
     (empty? tree) (= x max)
     (<= x (:value tree)) (recur (:left tree) x (:value tree))
