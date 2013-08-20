@@ -1,9 +1,7 @@
 (ns functional-data-structures.lheap)
 
-(defn rank [lheap]
-  (if (empty? lheap)
-    0
-    (:rank lheap)))
+(defn rank [{r :rank :as lheap}]
+  (if (empty? lheap) 0 r))
 
 (defn make-lheap
   ([value]
@@ -15,12 +13,12 @@
       (make-lheap (inc (rank b)) value a b)
       (make-lheap (inc (rank a)) value b a))))
 
-(defn merge-lheap [h1 h2]
+(defn merge-lheap [{x :value a1 :left b1 :right :as h1} {y :value a2 :left b2 :right :as h2}]
   (cond
     (empty? h1) h2
     (empty? h2) h1
-    (<= (:value h1) (:value h2)) (make-lheap (:value h1) (:left h1) (merge-lheap (:right h1) h2))
-    :default (make-lheap (:value h2) (:left h2) (merge-lheap (:right h2) h1))
+    (<= x y) (make-lheap x a1 (merge-lheap b1 h2))
+    :default (make-lheap y a2 (merge-lheap b2 h1))
     ))
 
 (defn insert [lheap x]
