@@ -24,22 +24,23 @@
 (defn insert [lheap x]
   (merge-lheap lheap (make-lheap x)))
 
-(defn smart-insert [lheap x]
+(defn smart-insert [{v :value l :left r :right :as lheap} x]
   (cond
     (empty? lheap) (make-lheap x)
-    (< x (:value lheap)) (smart-insert (make-lheap x (:left lheap) (:right lheap)) (:value lheap))
-    (< (rank (:right lheap)) (rank (:left lheap))) (make-lheap (:value lheap) (:left lheap) (smart-insert (:right lheap) x))
-    :default (make-lheap (:value lheap) (smart-insert (:left lheap) x) (:right lheap))
+    (< x v) (smart-insert (make-lheap x l r) v)
+    (< (rank r) (rank l)) 
+    (make-lheap v l (smart-insert r x))
+    :default (make-lheap v (smart-insert l x) r)
     )
   )
 
-(defn find-min [lheap]
+(defn find-min [{x :value a :left b :right :as lheap}]
   {:pre [((complement empty?) lheap)]}
-  (:value lheap))
+  x)
 
-(defn delete-min [lheap]
+(defn delete-min [{x :value a :left b :right :as lheap}]
   {:pre [((complement empty?) lheap)]}
-  (merge-lheap (:left lheap) (:right lheap)))
+  (merge-lheap a b))
 
 (defn lheap-from-seq [seq]
   (let [heaps (map make-lheap seq)]
