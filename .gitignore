@@ -7,3 +7,4 @@ pom.xml
 *.iml
 /.idea/
 .lein-failures
+/target/

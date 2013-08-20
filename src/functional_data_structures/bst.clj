@@ -5,26 +5,26 @@
   ([left value right]
     {:left left :value value :right right}))
 
-(defn member? [{left :left value :value right :right :as tree} x]
+(defn member? [{a :left y :value b :right :as tree} x]
   (cond
     (empty? tree) false
-    (< x value) (recur left x)
-    (> x value) (recur right x)
+    (< x y) (recur a x)
+    (> x y) (recur b x)
     :equal true))
 
-(defn insert [{left :left value :value right :right :as tree} x]
+(defn insert [{a :left y :value b :right :as s} x]
   (cond
-    (empty? tree) (make-tree x)
-    (< x value) (make-tree (insert left x) value right)
-    (> x value) (make-tree left value (insert right x))
-    :equal tree
+    (empty? s) (make-tree x)
+    (< x y) (make-tree (insert a x) y b)
+    (> x y) (make-tree a y (insert b x))
+    :equal s
     ))
 
 (defn- smart-member-helper [{left :left value :value right :right :as tree} x max]
   (cond
     (empty? tree) (= x max)
-    (<= x (:value tree)) (recur (:left tree) x (:value tree))
-    :default (recur (:right tree) x max)))
+    (<= x value) (recur left x value)
+    :default (recur right x max)))
 
 (defn smart-member? [tree x]
   (smart-member-helper tree x nil))
@@ -34,17 +34,17 @@
   ([left key value right]
     {:left left :key key :value value :right right}))
 
-(defn lookup [f-map key]
+(defn lookup [{l :left k :key v :value r :right :as f-map} key]
   (cond
     (empty? f-map) (throw (Exception. "NotFound"))
-    (< key (:key f-map)) (recur (:left f-map) key)
-    (> key (:key f-map)) (recur (:right f-map) key)
-    :equal (:value f-map)))
+    (< key k) (recur l key)
+    (> key k) (recur r key)
+    :equal v))
 
-(defn bind [f-map key value]
+(defn bind [{l :left k :key v :value r :right :as f-map} key value]
   (cond
     (empty? f-map) (make-finite-map key value)
-    (< key (:key f-map)) (make-finite-map (bind (:left f-map) key value) (:key f-map) (:value f-map) (:right f-map))
-    (> key (:key f-map)) (make-finite-map (:left f-map) (:key f-map) (:value f-map) (bind (:right f-map) key value))
-    :equal (make-finite-map (:left f-map) key value (:right f-map))
+    (< key k) (make-finite-map (bind l key value) k v r)
+    (> key k) (make-finite-map l k v (bind r key value))
+    :equal (make-finite-map l key value r)
     ))
