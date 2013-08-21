@@ -24,3 +24,8 @@
       (is (= (link first second) expected))
       (is (= (link second first) expected))))
    )
+
+(deftest test-insert
+  (testing "insert into empty"
+    (is (= (list (make-node 1)) (insert nil 1)))
+    (is (= (list (make-node 1)) (insert '() 1)))))
