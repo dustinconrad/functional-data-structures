@@ -28,4 +28,20 @@
 (deftest test-insert
   (testing "insert into empty"
     (is (= (list (make-node 1)) (insert nil 1)))
-    (is (= (list (make-node 1)) (insert '() 1)))))
+    (is (= (list (make-node 1)) (insert '() 1))))
+  (testing "insert into front"
+    (let [one (insert nil 10)
+          two (insert one 20)
+          inserted (insert two 1)]
+      (is (= (make-node 1) (first inserted)))
+      (is (not-empty (rest inserted)))
+      ))
+  (testing "insert into middle"
+    (let [one (insert nil 10)
+          two (insert one 20)
+          one-two (insert two 5)
+          three (insert one-two 1)]
+      (is (empty? (rest three)))
+      (is ((complement nil?) (first three)))
+      ))
+  )
