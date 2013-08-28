@@ -8,3 +8,4 @@ pom.xml
 /.idea/
 .lein-failures
 /target/
+.lein-repl-history

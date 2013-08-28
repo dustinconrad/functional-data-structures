@@ -24,3 +24,12 @@
 
 (defn insert [ts x]
   (ins-tree ts (make-node x)))
+
+(defn merge-bheap [[t1 & ts1-prime :as ts1] [t2 & ts2-prime :as ts2]]
+  (cond 
+    (empty? ts2) ts1
+    (empty? ts1) ts2
+    (< (rank t1) (rank t2)) (cons t1 (merge-bheap ts1-prime ts2))
+    (< (rank t2) (rank t1)) (cons t2 (merge-bheap ts2-prime ts1))
+    :default (ins-tree (merge-bheap ts1-prime ts2-prime) (link t1 t2))
+    ))

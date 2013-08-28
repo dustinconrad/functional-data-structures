@@ -43,5 +43,31 @@
           three (insert one-two 1)]
       (is (empty? (rest three)))
       (is ((complement nil?) (first three)))
-      ))
-  )
+      )))
+
+(deftest test-merge
+  (testing "empty merge"
+    (let [one (list (make-node 1))]
+      (is (= one (merge-bheap nil one)))
+      (is (= one (merge-bheap one nil)))
+      (is (= one (merge-bheap '() one)))
+      (is (= one (merge-bheap one '())))))
+  (testing "merge rank 0 and rank 1"
+    (let [one (insert nil 10)
+          two (insert one 20)
+          one-two (insert two 10)]
+      (is (= one-two (merge-bheap one two)))
+      (is (= one-two (merge-bheap two one)))))
+  (testing "merge same rank"
+    (let [one (insert nil 10)
+          uno (insert nil 20)
+          expected (insert one 20)]
+      (is (= expected (merge-bheap one uno)))
+      (is (= expected (merge-bheap uno one)))))
+  (testing "merge size two"
+    (let [one (-> nil (insert 10) (insert 20) (insert 30))
+          uno (-> nil (insert 35) (insert 25) (insert 15))
+          expected  (-> nil (insert 10) (insert 20) (insert 25) (insert 35) (insert 15) (insert 30))]
+      (is (= expected (merge-bheap one uno))))))
+
+

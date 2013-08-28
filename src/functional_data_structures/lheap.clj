@@ -15,8 +15,8 @@
 
 (defn merge-lheap [{x :value a1 :left b1 :right :as h1} {y :value a2 :left b2 :right :as h2}]
   (cond
-    (empty? h1) h2
     (empty? h2) h1
+    (empty? h1) h2
     (<= x y) (make-lheap x a1 (merge-lheap b1 h2))
     :default (make-lheap y a2 (merge-lheap b2 h1))
     ))
