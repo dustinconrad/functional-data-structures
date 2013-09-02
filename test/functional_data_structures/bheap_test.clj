@@ -70,4 +70,28 @@
           expected  (-> nil (insert 10) (insert 20) (insert 25) (insert 35) (insert 15) (insert 30))]
       (is (= expected (merge-bheap one uno))))))
 
+(deftest test-find-min
+  (testing "find min of size 1 bheap"
+    (let [bheap (insert nil 1)]
+      (is (= (find-min bheap) 1))))
+  (testing "find min of binomial heap"
+    (let [bheap (-> nil (insert 1) (insert 2))]
+      (is (= (find-min bheap) 1)))
+    (let [bheap (-> nil (insert 1) (insert 0))]
+      (is (= (find-min bheap) 0))))
+  (testing "exception"
+    (is (thrown? AssertionError (find-min nil))))
+  (testing "multiple inserts and find min"
+    (->>
+      (repeatedly 10 (fn [] (repeatedly 10 #(- 5000 (rand-int 10000)))))
+      (map
+        (fn [c]
+          (->> c
+            (reduce
+              insert
+              nil)
+            (#(is (= (apply min c) (find-min %))))
+            )))
+      doall))
+  )
 

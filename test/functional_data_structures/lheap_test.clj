@@ -60,8 +60,7 @@
     (let [lheap (-> nil (insert 1) (insert 2))]
       (is (= (find-min lheap) 1)))
     (let [lheap (-> nil (insert 1) (insert 0))]
-      (is (= (find-min lheap) 0)))
-    )
+      (is (= (find-min lheap) 0))))
   (testing "exception"
     (is (thrown? AssertionError (find-min nil))))
   (testing "multiple inserts and find min"
@@ -86,8 +85,7 @@
     (let [lheap (-> nil (smart-insert 1) (smart-insert 2))]
       (is (= (find-min lheap) 1)))
     (let [lheap (-> nil (smart-insert 1) (smart-insert 0))]
-      (is (= (find-min lheap) 0)))
-    )
+      (is (= (find-min lheap) 0))))
   (testing "multiple inserts and find min"
     (->>
       (repeatedly 10 (fn [] (repeatedly 10 #(- 5000 (rand-int 10000)))))
@@ -114,8 +112,7 @@
       (is (not= old-min (find-min (delete-min lheap)))))
     (let [lheap (-> nil (insert 1) (insert 0))
           old-min (find-min lheap)]
-      (is (not= old-min (find-min (delete-min lheap)))))
-    )
+      (is (not= old-min (find-min (delete-min lheap))))))
   (testing "exception"
     (is (thrown? AssertionError (delete-min nil))))
   (testing "multiple inserts and find/delete min"
@@ -144,8 +141,7 @@
       (is (not= old-min (find-min (delete-min lheap)))))
     (let [lheap (-> nil (smart-insert 1) (smart-insert 0))
           old-min (find-min lheap)]
-      (is (not= old-min (find-min (delete-min lheap)))))
-    )
+      (is (not= old-min (find-min (delete-min lheap))))))
   (testing "multiple inserts and find/delete min"
     (->>
       (repeatedly 10 (fn [] (repeatedly 10 #(- 5000 (rand-int 10000)))))
@@ -168,8 +164,7 @@
     (let [lheap (lheap-from-seq [1 2])]
       (is (= (find-min lheap) 1)))
     (let [lheap (lheap-from-seq [0 1])]
-      (is (= (find-min lheap) 0)))
-    )
+      (is (= (find-min lheap) 0))))
   (testing "multiple inserts and find min"
     (->>
       (repeatedly 10 (fn [] (repeatedly 10 #(- 5000 (rand-int 10000)))))

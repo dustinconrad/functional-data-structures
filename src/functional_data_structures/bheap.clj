@@ -33,3 +33,20 @@
     (< (rank t2) (rank t1)) (cons t2 (merge-bheap ts2-prime ts1))
     :default (ins-tree (merge-bheap ts1-prime ts2-prime) (link t1 t2))
     ))
+
+(defn remove-min-tree [[t & ts :as tee]]
+  {:pre ((complement empty?) tee)}
+  (if (empty? ts)
+    [t ts]
+    (let [[t-prime ts-prime] (remove-min-tree ts)]
+      (if (<= (:value t) (:value t-prime))
+        [t ts]
+        [t-prime (cons t ts-prime)]))))
+
+(defn find-min [ts]
+  (let [[t _] (remove-min-tree ts)]
+    (:value t)))
+
+(defn delete-min [ts]
+  (let [[{x :value ts1 :children} ts2] (remove-min-tree ts)]
+    (merge-bheap (reverse ts1) ts2)))
