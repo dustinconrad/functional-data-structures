@@ -124,7 +124,10 @@
             (reduce
               insert
               nil)
-            (#(is (not= (apply min c) (find-min (delete-min %)))))
+            (iterate delete-min)
+            (take (count c))
+            (map find-min)
+            (#(is (= % (sort c))))
             )))
       doall))
   )
@@ -151,7 +154,10 @@
             (reduce
               smart-insert
               nil)
-            (#(is (not= (apply min c) (find-min (delete-min %)))))
+            (iterate delete-min)
+            (take (count c))
+            (map find-min)
+            (#(is (= % (sort c))))
             )))
       doall))
   )

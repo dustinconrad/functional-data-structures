@@ -71,7 +71,7 @@
       (is (= expected (merge-bheap one uno))))))
 
 (deftest test-find-min
-  (testing "find min of size 1 bheap"
+  (testing "find min of size 1 binomial heap"
     (let [bheap (insert nil 1)]
       (is (= (find-min bheap) 1))))
   (testing "find min of binomial heap"
@@ -95,3 +95,33 @@
       doall))
   )
 
+(deftest test-delete-min
+  (testing "delete min of size 1 binomial heap"
+    (let [bheap (insert nil 1)
+          actual (delete-min bheap)]
+      (is (empty? actual))))
+  (testing "delete min of leftist heap"
+    (let [bheap (-> nil (insert 1) (insert 2))
+          old-min (find-min bheap)]
+      (is (not= old-min (find-min (delete-min bheap)))))
+    (let [bheap (-> nil (insert 1) (insert 0))
+          old-min (find-min bheap)]
+      (is (not= old-min (find-min (delete-min bheap))))))
+  (testing "exception"
+    (is (thrown? AssertionError (delete-min nil))))
+  (testing "multiple inserts and find/delete min"
+    (->>
+      (repeatedly 10 (fn [] (repeatedly 10 #(- 5000 (rand-int 10000)))))
+      (map
+        (fn [c]
+          (->> c
+            (reduce
+              insert
+              nil)
+            (iterate delete-min)
+            (take (count c))
+            (map find-min)
+            (#(is (= % (sort c))))
+            )))
+      doall))
+  )
