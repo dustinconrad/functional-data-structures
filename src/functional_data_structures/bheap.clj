@@ -47,6 +47,15 @@
   (let [[t _] (remove-min-tree ts)]
     (:value t)))
 
+(defn find-min-direct [[{tv :value :as t} & ts :as tee]]
+  {:pre ((complement empty?) tee)}
+  (if (empty? ts)
+    tv
+    (let [tv-prime (find-min-direct ts)]
+      (if (<= tv tv-prime)
+        tv
+        tv-prime))))
+
 (defn delete-min [ts]
   (let [[{x :value ts1 :children} ts2] (remove-min-tree ts)]
     (merge-bheap (reverse ts1) ts2)))

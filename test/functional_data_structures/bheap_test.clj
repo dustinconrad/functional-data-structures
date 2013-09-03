@@ -95,6 +95,31 @@
       doall))
   )
 
+(deftest test-find-direct
+  (testing "find min direct of size 1 binomial heap"
+    (let [bheap (insert nil 1)]
+      (is (= (find-min-direct bheap) 1))))
+  (testing "find min direct of binomial heap"
+    (let [bheap (-> nil (insert 1) (insert 2))]
+      (is (= (find-min-direct bheap) 1)))
+    (let [bheap (-> nil (insert 1) (insert 0))]
+      (is (= (find-min-direct bheap) 0))))
+  (testing "exception"
+    (is (thrown? AssertionError (find-min-direct nil))))
+  (testing "multiple inserts and find min direct"
+    (->>
+      (repeatedly 10 (fn [] (repeatedly 10 #(- 5000 (rand-int 10000)))))
+      (map
+        (fn [c]
+          (->> c
+            (reduce
+              insert
+              nil)
+            (#(is (= (apply min c) (find-min-direct %))))
+            )))
+      doall))
+  )
+
 (deftest test-delete-min
   (testing "delete min of size 1 binomial heap"
     (let [bheap (insert nil 1)
