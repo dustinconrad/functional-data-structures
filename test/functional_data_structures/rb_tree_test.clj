@@ -20,3 +20,20 @@
       (is (not (member? two-level 4)))
       (is (not (member? two-level -1))))
     ))
+
+(deftest test-insert-member?
+  (testing "random inserts"
+    (->>
+      (range 1 11)
+      (map
+        (fn [i]
+          (let [test-tree (reduce #(insert % %2) nil (shuffle (range i)))]
+            (do
+              (doall
+                (map
+                  #(is (member? test-tree %))
+                  (range i)))
+              (is (not (member? test-tree -10)))
+              (is (not (member? test-tree (inc i))))
+              ))))
+      doall)))
