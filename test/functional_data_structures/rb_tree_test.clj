@@ -2,9 +2,27 @@
   (:require [clojure.test :refer :all ]
             [functional-data-structures.rb-tree :refer :all ]))
 
+(defn black? [node]
+  (or (empty? node) (= :B (:color node))))
+
+(defn red? [node]
+  (= :R (:color node)))
+
+(defn verify-rb-tree [{color :color left :left value :value right :right :as tree}]
+  (cond
+    (empty? tree) 0
+    (and (red? tree) (or (red? left) (red? right))) (throw (IllegalStateException. "Red-Black tree invariant violated: Red node with red child"))
+    :else (let [left-count (verify-rb-tree left)
+                right-count (verify-rb-tree right)
+                current-value-count (if (black? tree) 1 0)]
+            (if-not (= left-count right-count)
+              (throw (IllegalStateException. "Red-Black tree invariants violated: different number of black nodes to empty node"))
+              (+ current-value-count left-count)))))
+
 (deftest test-member?
   (testing "one level"
     (let [one-level (make-rb-tree 1)]
+      (is (= 0 (verify-rb-tree one-level)))
       (is (member? one-level 1))
       (is (not (member? one-level 2)))
       (is (not (member? one-level -1)))))
@@ -14,6 +32,7 @@
                       (make-rb-tree 1)
                       2
                       (make-rb-tree 3))]
+      (is (= 1 (verify-rb-tree two-level)))
       (is (member? two-level 1))
       (is (member? two-level 2))
       (is (member? two-level 3))
