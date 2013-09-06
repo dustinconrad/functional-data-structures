@@ -42,7 +42,7 @@
   {:pre [((complement empty?) lheap)]}
   (merge-lheap a b))
 
-(defn lheap-from-seq [seq]
+(defn from-seq [seq]
   (let [heaps (map make-lheap seq)]
     (loop [hs heaps]
       (if (= (count hs) 1)

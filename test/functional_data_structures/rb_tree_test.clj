@@ -52,6 +52,7 @@
                 (map
                   #(is (member? test-tree %))
                   (range i)))
+              (is (verify-rb-tree test-tree))
               (is (not (member? test-tree -10)))
               (is (not (member? test-tree (inc i))))
               ))))

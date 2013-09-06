@@ -33,3 +33,5 @@
         {a-prime :left y-prime :value b-prime :right} (ins s-prime x-prime)]
     (make-rb-tree :B a-prime y-prime b-prime)))
  
+(defn from-ord-list [coll]
+  )
