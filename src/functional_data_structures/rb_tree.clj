@@ -33,17 +33,23 @@
         {a-prime :left y-prime :value b-prime :right} (ins s x)]
     (make-rb-tree :B a-prime y-prime b-prime)))
 
-(defn from-ord-list [coll]
-  (let [fol (fn fol [coll colors]
-              (cond
-                (empty? coll) nil
-                (= (count coll) 1) (balance (first colors) nil (first coll) nil)
-                (= (count coll) 2) (balance (first colors) nil (first coll) (fol (rest coll) (rest colors)))
-                :default (let [half (quot (count coll) 2)
-                               left (take half coll)
-                               mid (nth coll half)
-                               right (drop (inc half) coll)]
-                           (balance (first colors) (fol left (rest colors)) mid (fol right (rest colors))))))
-        {a :left y :value b :right :as tree} (fol coll (cons :B (repeat :R)))]
-    (when-not (empty? tree)
-      (fol coll (cons :B (repeat :R))))))
+;TODO: from-ord-list, page 28
+;(defn from-ord-list [coll]
+;  (let [fol (fn fol [coll]
+;              (cond
+;                (empty? coll) nil
+;                (= (count coll) 1) (make-rb-tree (first coll))
+;                (= (count coll) 2) (make-rb-tree :B nil (first coll) (from-ord-list (rest coll)))
+;                :default (let [half (quot (count coll) 2)
+;                               left (take half coll)
+;                               mid (nth coll half)
+;                               right (drop (inc half) coll)
+;                               a (fol left)
+;                               b (fol right)
+;                               color :B]
+;                           (balance color (fol left) mid (fol right)))))
+;        {a :left y :value b :right :as tree} (fol coll)]
+;    (when-not (empty? tree)
+;;      (make-rb-tree :B a y b)
+;      tree
+;      )))
