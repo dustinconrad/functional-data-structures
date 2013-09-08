@@ -57,3 +57,43 @@
               (is (not (member? test-tree (inc i))))
               ))))
       doall)))
+
+
+(deftest test-from-ord-list
+  (testing "empty"
+    (let [tree (from-ord-list nil)]
+      (is (verify-rb-tree tree))
+      (is (= tree nil))))
+  (testing "size one"
+    (let [coll (range 1)
+          tree (from-ord-list coll)]
+      (is (verify-rb-tree tree))
+      (doall
+        (map
+          #(is (member? tree %))
+          coll))))
+  (testing "size two"
+    (let [coll (range 2)
+          tree (from-ord-list coll)]
+      (is (verify-rb-tree tree))
+      (doall
+        (map
+          #(is (member? tree %))
+          coll))))
+  (testing "size three"
+    (let [coll (range 3)
+          tree (from-ord-list coll)]
+      (is (verify-rb-tree tree))
+      (doall
+        (map
+          #(is (member? tree %))
+          coll))))
+  (testing "size four"
+    (let [coll (range 4)
+          tree (from-ord-list coll)]
+      (is (verify-rb-tree tree))
+      (doall
+        (map
+          #(is (member? tree %))
+          coll))))
+  )
