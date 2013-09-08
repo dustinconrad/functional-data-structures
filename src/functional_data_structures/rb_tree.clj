@@ -34,14 +34,16 @@
     (make-rb-tree :B a-prime y-prime b-prime)))
 
 (defn from-ord-list [coll]
-  (letfn [(fol [coll colors]
-            (cond
-              (empty? coll) nil
-              (= (count coll) 1) (balance (first colors) nil (first coll) nil)
-              (= (count coll) 2) (balance (first colors) nil (first coll) (fol (rest coll) (rest colors)))
-              :default (let [half (quot (count coll) 2)
-                             left (take half coll)
-                             mid (nth coll half)
-                             right (drop (inc half) coll)]
-                         (balance (first colors) (fol left (rest colors)) mid (fol right (rest colors))))))]
-    (fol coll (cons :B (repeat :R)))))
+  (let [fol (fn fol [coll colors]
+              (cond
+                (empty? coll) nil
+                (= (count coll) 1) (balance (first colors) nil (first coll) nil)
+                (= (count coll) 2) (balance (first colors) nil (first coll) (fol (rest coll) (rest colors)))
+                :default (let [half (quot (count coll) 2)
+                               left (take half coll)
+                               mid (nth coll half)
+                               right (drop (inc half) coll)]
+                           (balance (first colors) (fol left (rest colors)) mid (fol right (rest colors))))))
+        {a :left y :value b :right :as tree} (fol coll (cons :B (repeat :R)))]
+    (when-not (empty? tree)
+      (fol coll (cons :B (repeat :R))))))
