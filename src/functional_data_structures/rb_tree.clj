@@ -24,11 +24,11 @@
     :else (make-rb-tree color left value right)))
 
 (defn insert [s x]
-  (let [ins (fn insrt [{color :color a :left y :value b :right :as s} x]
+  (let [ins (fn ins [{color :color a :left y :value b :right :as s} x]
               (cond
                 (empty? s) (make-rb-tree x)
-                (< x y) (balance color (insrt a x) y b)
-                (> x y) (balance color a y (insrt b x))
+                (< x y) (balance color (ins a x) y b)
+                (> x y) (balance color a y (ins b x))
                 :default s))
         {a-prime :left y-prime :value b-prime :right} (ins s x)]
     (make-rb-tree :B a-prime y-prime b-prime)))
