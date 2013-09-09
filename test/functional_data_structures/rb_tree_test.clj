@@ -59,53 +59,53 @@
       doall)))
 
 
-;(deftest test-from-ord-list
-;  (testing "empty"
-;    (let [tree (from-ord-list nil)]
-;      (is (verify-rb-tree tree))
-;      (is (= tree nil))))
-;  (testing "size one"
-;    (let [coll (range 1)
-;          tree (from-ord-list coll)]
-;      (is (verify-rb-tree tree))
-;      (doall
-;        (map
-;          #(is (member? tree %))
-;          coll))))
-;  (testing "size two"
-;    (let [coll (range 2)
-;          tree (from-ord-list coll)]
-;      (is (verify-rb-tree tree))
-;      (doall
-;        (map
-;          #(is (member? tree %))
-;          coll))))
-;  (testing "size three"
-;    (let [coll (range 3)
-;          tree (from-ord-list coll)]
-;      (is (verify-rb-tree tree))
-;      (doall
-;        (map
-;          #(is (member? tree %))
-;          coll))))
-;  (testing "size four"
-;    (let [coll (range 4)
-;          tree (from-ord-list coll)]
-;      (is (verify-rb-tree tree))
-;      (doall
-;        (map
-;          #(is (member? tree %))
-;          coll))))
-;  (testing "larger sizes"
-;    (->>
-;      (range 1 11)
-;      (map
-;        (fn [i]
-;          (let [coll (range i)
-;                tree (from-ord-list coll)]
-;            (is (verify-rb-tree tree) (str "i:" i " tree: " tree ))
-;              (map
-;                #(is (member? tree %))
-;                coll))))
-;      doall))
-;  )
+(deftest test-from-ord-list
+  (testing "empty"
+    (let [tree (from-ord-list nil)]
+      (is (verify-rb-tree tree))
+      (is (= tree nil))))
+  (testing "size one"
+    (let [coll (range 1)
+          tree (from-ord-list coll)]
+      (is (verify-rb-tree tree))
+      (doall
+        (map
+          #(is (member? tree %))
+          coll))))
+  (testing "size two"
+    (let [coll (range 2)
+          tree (from-ord-list coll)]
+      (is (verify-rb-tree tree) (str tree))
+      (doall
+        (map
+          #(is (member? tree %))
+          coll))))
+  (testing "size three"
+    (let [coll (range 3)
+          tree (from-ord-list coll)]
+      (is (verify-rb-tree tree))
+      (doall
+        (map
+          #(is (member? tree %))
+          coll))))
+  (testing "size four"
+    (let [coll (range 4)
+          tree (from-ord-list coll)]
+      (is (verify-rb-tree tree) (str tree))
+      (doall
+        (map
+          #(is (member? tree %))
+          coll))))
+  (testing "larger sizes"
+    (->>
+      (range 1 30)
+      (map
+        (fn [i]
+          (let [coll (range i)
+                tree (from-ord-list coll)]
+            (is (verify-rb-tree tree) (str "i:" i " tree: " tree ))
+              (map
+                #(is (member? tree %))
+                coll))))
+      doall))
+  )
