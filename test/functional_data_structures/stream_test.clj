@@ -35,3 +35,18 @@
             (is (not (realized? taken)))
             (is (= (take n coll) taken)))))
       doall)))
+
+(deftest test-take
+  (testing "random drops"
+    (->>
+      (for [i (range 1 11)]
+        [(rand-int 25) (take (rand-int 25) (repeatedly #(rand-int 25)))])
+      (map
+        (fn [[n c]]
+          (let [coll (doall c)
+                dropped (functional-data-structures.stream/drop n coll)]
+            (is (realized? c))
+            (is (is-lazy? dropped))
+            (is (not (realized? dropped)))
+            (is (= (drop n coll) dropped)))))
+      doall)))
