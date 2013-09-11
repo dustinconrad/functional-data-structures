@@ -1,5 +1,5 @@
 (ns functional-data-structures.stream
-  (:refer-clojure :exclude [take drop]))
+  (:refer-clojure :exclude [take drop reverse]))
 
 (defn ++ [[x & s :as xs] t]
   (if (empty? xs) 

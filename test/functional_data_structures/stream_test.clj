@@ -1,6 +1,6 @@
 (ns functional-data-structures.stream-test
   (:require [clojure.test :refer :all ]
-            [functional-data-structures.stream :refer :all :exclude [take]]))
+            [functional-data-structures.stream :refer [++]]))
 
 (defmacro is-lazy? [x] `(is (instance? clojure.lang.LazySeq ~x)))
 
@@ -36,7 +36,7 @@
             (is (= (take n coll) taken)))))
       doall)))
 
-(deftest test-take
+(deftest test-drop
   (testing "random drops"
     (->>
       (for [i (range 1 11)]
