@@ -18,3 +18,10 @@
     (zero? n) (lazy-seq xs)
     (nil? xs) (lazy-seq nil)
     :else (lazy-seq (drop (dec n) s))))
+
+(defn reverse [s]
+  (letfn [(reverse-prime [[x & s :as xs] r]
+            (if (empty? xs)
+              r
+              (lazy-seq (reverse-prime s (lazy-seq (cons x r))))))]
+    (reverse-prime s nil)))

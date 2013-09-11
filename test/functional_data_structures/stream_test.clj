@@ -25,7 +25,7 @@
   (testing "random takes"
     (->>
       (for [i (range 1 11)]
-        [(rand-int 25) (take (rand-int 25) (repeatedly #(rand-int 25)))])
+        [(inc (rand-int 24)) (take (inc (rand-int 24)) (repeatedly #(rand-int 25)))])
       (map
         (fn [[n c]]
           (let [coll (doall c)
@@ -40,7 +40,7 @@
   (testing "random drops"
     (->>
       (for [i (range 1 11)]
-        [(rand-int 25) (take (rand-int 25) (repeatedly #(rand-int 25)))])
+        [(inc (rand-int 24)) (take (inc (rand-int 24)) (repeatedly #(rand-int 25)))])
       (map
         (fn [[n c]]
           (let [coll (doall c)
@@ -49,4 +49,19 @@
             (is (is-lazy? dropped))
             (is (not (realized? dropped)))
             (is (= (drop n coll) dropped)))))
+      doall)))
+
+(deftest test-reverse
+  (testing "random reverses"
+    (->>
+      (for [i (range 1 11)]
+        (take (inc (rand-int 25)) (repeatedly #(rand-int 25))))
+      (map
+        (fn [c]
+          (let [coll (doall c)
+                reversed (functional-data-structures.stream/reverse coll)]
+            (is (realized? c))
+            (is (is-lazy? reversed))
+            (is (not (realized? reversed)))
+            (is (= (reverse coll) reversed)))))
       doall)))
