@@ -28,20 +28,13 @@
 
 (defn insertion-sort [coll k]
   (letfn [(insert [[x & s :as xs] y k]
-            (do (println "insert" xs y k)
             (cond
               (empty? xs) (list y)
-              (zero? k) nil
+              (zero? k) xs
               (< y x) (cons y xs)
-              :else (cons x (insert s y (dec k))))))
+              :else (cons x (insert s y (dec k)))))
           (ins-sort [[t & u :as tu] k xs]
-            (do
-              (println "ins-sort" tu k xs)
             (cond
               (empty? tu) xs
-              :else (ins-sort u k (insert xs t k)))))]
+              :else (ins-sort u k (insert xs t k))))]
     (ins-sort coll k nil)))
-
-(let [c (shuffle (range 10))]
-  (do (println c)
-    (insertion-sort c 4)))
