@@ -14,11 +14,11 @@
           (let [l (doall left)
                 r (doall right)
                 together (++ l r)]
-            (is (realized? l) (str l r together))
-            (is (realized? r) (str l r together))
-            (is (is-lazy? together) (str l r together))
-            (is (not (realized? together)) (str l r together))
-            (is (= (concat l r) (++ l r)) (str l r together)))))
+            (is (realized? l) (str left right (concat left right)))
+            (is (realized? r) (str left right (concat left right)))
+            (is (is-lazy? together) (str left right (concat left right)))
+            (is (not (realized? together)) (str left right (concat left right)))
+            (is (= (concat l r) (++ l r)) (str left right (concat left right))))))
       doall)))
 
 (deftest test-take

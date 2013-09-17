@@ -1,29 +1,34 @@
-(ns functional-data-structures.unbalanced-set)
+(ns functional-data-structures.unbalanced-set
+  (:require [functional-data-structures.set :refer :all]))
 
-(defprotocol Set
-  (is-empty? [this])
-  (is-member? [this value])
-  (insert [this value]))
+(defn- lt [x y]
+  (neg? (compare x y)))
 
-(defrecord BST [left value right]
+(defn- gt [x y]
+  (pos? (compare x y)))
+
+(defrecord UnbalancedSet [left value right]
   Set
-  (is-empty? [_] (nil? value))
-  (is-member? [this x]
+  (is-empty? [_] false)
+  (is-member? [{a :left y :value b :right :as this} x]
     (cond
-      (.is-empty? this) false
-      (< x value) (.is-member? left x)
-      (> x value) (.is-member? right x)
+      (lt x y) (is-member? a x)
+      (gt x y) (is-member? b x)
       :equal true))
-  (insert [this x]
+  (insert [{a :left y :value b :right :as this} x]
     (cond
-      (.is-empty? this) (->BST (->BST nil nil nil) x (->BST nil nil nil))
-      (< x value) (->BST (.insert left x) value right)
-      (> x value) (->BST left value (.insert right x))
-      :equal this))
-  )
+      (lt x y) (->UnbalancedSet (insert a x) y b)
+      (gt x y) (->UnbalancedSet a y (insert b x))
+      :equal this)))
+
+(extend-protocol Set
+  nil
+  (is-empty? [_] true)
+  (is-member? [_ _] false)
+  (insert [this x]
+    (->UnbalancedSet nil x nil)))
 
 (defn unbalanced-set
-  ([] (unbalanced-set nil nil nil))
-  ([value] (unbalanced-set (unbalanced-set) value (unbalanced-set)))
+  ([value] (unbalanced-set nil value nil))
   ([left value right]
-    (->BST left value right)))
+    (->UnbalancedSet left value right)))
