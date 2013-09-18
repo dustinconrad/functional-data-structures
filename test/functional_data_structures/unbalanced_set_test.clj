@@ -63,3 +63,22 @@
               doall))))
       doall)
     ))
+
+(deftest test-smart-member?
+  (testing "one level"
+    (let [one-level (unbalanced-set 1)]
+      (is (smart-member? one-level 1))
+      (is (not (smart-member? one-level 2)))
+      (is (not (smart-member? one-level -1)))))
+  (testing "two levels"
+    (let [two-level
+          (unbalanced-set
+            (unbalanced-set 1)
+            2
+            (unbalanced-set 3))]
+      (is (smart-member? two-level 1))
+      (is (smart-member? two-level 2))
+      (is (smart-member? two-level 3))
+      (is (not (smart-member? two-level 4)))
+      (is (not (smart-member? two-level -1))))
+    ))
