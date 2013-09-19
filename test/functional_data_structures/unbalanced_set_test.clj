@@ -82,3 +82,51 @@
       (is (not (smart-member? two-level 4)))
       (is (not (smart-member? two-level -1))))
     ))
+
+(deftest test-insert-smart-member?
+  (testing "random inserts"
+    (->>
+      (range 1 11)
+      (map
+        (fn [i]
+          (let [test-tree (reduce #(insert % %2) nil (shuffle (range i)))]
+            (doall
+              (map
+                #(is (smart-member? test-tree %))
+                (range i)))
+            (is (not (smart-member? test-tree -10)))
+            (is (not (smart-member? test-tree (inc i))))
+            )))
+      doall)))
+
+(deftest test-smart-insert-member?
+  (testing "one level"
+    (let [one-level (-> nil (smart-insert 1))]
+      (is (is-member? one-level 1))
+      (is (not (is-member? one-level 2)))
+      (is (not (is-member? one-level -1)))))
+  (testing "two levels"
+    (let [two-level
+          (->
+            nil
+            (smart-insert 2)
+            (smart-insert 1)
+            (smart-insert 3))]
+      (is (is-member? two-level 1))
+      (is (is-member? two-level 2))
+      (is (is-member? two-level 3))
+      (is (not (is-member? two-level 4)))
+      (is (not (is-member? two-level -1)))))
+  (testing "random inserts"
+    (->>
+      (range 1 11)
+      (map
+        (fn [i]
+          (let [test-tree (reduce #(smart-insert % %2) nil (shuffle (range i)))]
+            (->>
+              (map
+                #(is (is-member? test-tree %) true)
+                (range i))
+              doall))))
+      doall))
+    )
