@@ -36,7 +36,7 @@
   (smart-insert [this x]
     (try
       (smart-insert-helper this x nil)
-      (catch IllegalStateException ise this)))
+      (catch IllegalArgumentException iae this)))
   (smart-member? [this x]
     (smart-member-helper this x nil)))
 
