@@ -140,3 +140,19 @@
         (map
           #(is (is-member? set %)))
         doall))))
+
+(deftest bind-lookup
+  (testing "bind and lookup"
+    (let [keys    [5 3 9 7    1]
+          values  [1 3 5 100 200]
+          pairs (map vector keys values)
+          answers (into {} pairs)
+          f-map (reduce (fn [acc [l r]] (bind acc l r)) nil pairs)]
+      (->>
+        (map
+          #(is (= (lookup f-map %) (answers %)))
+          keys)
+        doall)
+      (is (thrown-with-msg? Exception #"NotFound" (lookup f-map -1)))
+      (is (thrown-with-msg? Exception #"NotFound" (lookup f-map 2)))
+      )))
