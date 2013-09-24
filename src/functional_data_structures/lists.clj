@@ -11,7 +11,8 @@
     (zero? i) (cons y xs)
     :else (cons x (update xs (dec i) y))))
 
-(defn suffixes [xs]
-  (if (empty? xs)
-    [xs]
-    (cons xs (suffixes (rest xs)))))
+; exercise 2.1
+(defn suffixes [[x & xs :as lst]]
+  (if (empty? lst)
+    [(list)]
+    (cons lst (suffixes xs))))
