@@ -3,6 +3,11 @@
             [functional-data-structures.unbalanced-set :refer :all ]
             [functional-data-structures.set :refer :all ]))
 
+(defn unbalanced-set
+  ([value] (unbalanced-set nil value nil))
+  ([left value right]
+    (->UnbalancedSet left value right)))
+
 (deftest test-is-member?
   (testing "testing one level"
     (let [one-level (unbalanced-set 1)]
@@ -19,8 +24,7 @@
       (is (is-member? two-level 2))
       (is (is-member? two-level 3))
       (is (not (is-member? two-level 4)))
-      (is (not (is-member? two-level -1))))
-    ))
+      (is (not (is-member? two-level -1))))))
 
 (deftest test-insert
   (testing "one"
@@ -29,8 +33,7 @@
     (is (= (-> nil (insert 3) (insert 1)) (unbalanced-set (unbalanced-set 1) 3 nil)))
     (is (= (-> nil (insert 3) (insert 1) (insert 4)) (unbalanced-set (unbalanced-set 1) 3 (unbalanced-set 4))))
     (is (= (-> nil (insert 1) (insert 2) (insert 4)) (unbalanced-set nil 1 (unbalanced-set nil 2 (unbalanced-set 4)))))
-    (is (= (-> nil (insert 1) (insert 3) (insert 2)) (unbalanced-set nil 1 (unbalanced-set (unbalanced-set 2) 3 nil))))
-    ))
+    (is (= (-> nil (insert 1) (insert 3) (insert 2)) (unbalanced-set nil 1 (unbalanced-set (unbalanced-set 2) 3 nil))))))
 
 (deftest test-insert-member?
   (testing "one level"
@@ -61,8 +64,7 @@
                 #(is (is-member? test-tree %) true)
                 (range i))
               doall))))
-      doall)
-    ))
+      doall)))
 
 (deftest test-smart-member?
   (testing "one level"
@@ -80,8 +82,7 @@
       (is (smart-member? two-level 2))
       (is (smart-member? two-level 3))
       (is (not (smart-member? two-level 4)))
-      (is (not (smart-member? two-level -1))))
-    ))
+      (is (not (smart-member? two-level -1))))))
 
 (deftest test-insert-smart-member?
   (testing "random inserts"
@@ -129,5 +130,4 @@
                 #(is (smart-member? test-tree %) true)
                 (range i))
               doall))))
-      doall))
-    )
+      doall)))

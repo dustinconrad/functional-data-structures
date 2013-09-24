@@ -1,5 +1,5 @@
 (ns functional-data-structures.unbalanced-set
-  (:require [functional-data-structures.set :refer :all]))
+  (:require [functional-data-structures.set :refer :all ]))
 
 ;chapter 2.2
 
@@ -65,7 +65,11 @@
     (lte? x y) (->UnbalancedSet (smart-insert-helper a x y) y b)
     :default (->UnbalancedSet a y (smart-insert-helper b x max))))
 
-(defn unbalanced-set
-  ([value] (unbalanced-set nil value nil))
-  ([left value right]
-    (->UnbalancedSet left value right)))
+;exercise 2.5
+;a)
+(defn complete [x d]
+  (if (zero? d)
+    (->UnbalancedSet nil x nil)
+    (let [node (complete x (dec d))]
+      (->UnbalancedSet node x node))))
+;b)
