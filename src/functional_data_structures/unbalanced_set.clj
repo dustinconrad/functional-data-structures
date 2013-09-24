@@ -86,3 +86,22 @@
   (create-helper 0 n))
 
 ;exercise 2.6
+(defrecord FiniteMap [left key value right]
+  Map
+  (is-empty-map? [_] false)
+  (bind [{a :left y :key z :value b :right :as this} k v]
+    (cond
+      (lt? k y) (->FiniteMap (bind a k v) y z b)
+      (gt? k y) (->FiniteMap a y z (bind b k v))
+      :equal (->FiniteMap a k v b)))
+  (lookup [{a :left y :key z :value b :right :as this} k]
+    (cond
+      (lt? k y) (lookup a k)
+      (gt? k y) (lookup b k)
+      :equal z)))
+
+(extend-protocol Map
+  nil
+  (is-empty-map? [_] true)
+  (bind [_ k v] (->FiniteMap nil k v nil))
+  (lookup [_ _] (throw (Exception. "NotFound"))))

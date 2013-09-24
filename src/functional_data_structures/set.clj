@@ -10,6 +10,6 @@
   (smart-member? [ss value]))
 
 (defprotocol Map
-  (is-empty? [m])
+  (is-empty-map? [m])
   (bind [m k v])
   (lookup [m k]))
