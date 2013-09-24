@@ -73,3 +73,14 @@
     (let [node (complete x (dec d))]
       (->UnbalancedSet node x node))))
 ;b)
+(defn- create-helper [min max]
+  (cond
+    (>= min max) nil
+    :default (let [mid (quot (+ min max) 2)]
+               (->UnbalancedSet
+                 (create-helper min mid)
+                 mid
+                 (create-helper (inc mid) max)))))
+
+(defn create [n]
+  (create-helper 0 n))

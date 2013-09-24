@@ -131,3 +131,12 @@
                 (range i))
               doall))))
       doall)))
+
+(deftest test-create
+  (testing "test create"
+    (let [set (create 103)]
+      (->>
+        (range 103)
+        (map
+          #(is (is-member? set %)))
+        doall))))
