@@ -84,3 +84,5 @@
 
 (defn create [n]
   (create-helper 0 n))
+
+;exercise 2.6
