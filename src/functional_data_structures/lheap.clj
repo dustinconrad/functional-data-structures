@@ -55,7 +55,10 @@
             (fn [[l r]] (merge-heap l r))
             (partition 2 2 [nil] hs)))))))
 
-(let [s (->LeftistHeap 2 185 (->LeftistHeap 1 1876 nil nil) (->LeftistHeap 1 4375 nil nil))]
-  (do
-    (println s)
-    (delete-min s)))
+(->>
+  (list -4916 3813 -543)
+  (reduce
+    smart-insert
+    nil)
+  (iterate #(do (println %) (delete-min %)))
+  (take 3))

@@ -154,8 +154,7 @@
             (iterate delete-min)
             (take (count c))
             (map find-min)
-            (#(is (= % (sort c))))
-            doall)))
+            (#(is (= % (sort c)))))))
       doall)))
 
 ;(deftest test-find-min-from-seq
