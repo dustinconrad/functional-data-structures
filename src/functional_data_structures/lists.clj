@@ -1,5 +1,6 @@
 (ns functional-data-structures.lists)
 
+;chapter 2.1
 (defn ++ [xs ys]
   (if (empty? xs)
     ys

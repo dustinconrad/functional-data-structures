@@ -5,10 +5,6 @@
   (is-member? [s value])
   (insert [s value]))
 
-(defprotocol SmartSet
-  (smart-insert [ss value])
-  (smart-member? [ss value]))
-
 (defprotocol Map
   (is-empty-map? [m])
   (bind [m k v])

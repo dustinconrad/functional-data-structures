@@ -1,28 +1,12 @@
 (ns functional-data-structures.unbalanced-set
-  (:require [functional-data-structures.set :refer :all ]))
+  (:require [functional-data-structures.set :refer :all ])
+  (:require [functional-data-structures.compare :refer :all ]))
 
 ;chapter 2.2
-
-(defn- lt? [x y]
-  (neg? (compare x y)))
-
-(defn- gt? [x y]
-  (pos? (compare x y)))
-
-(defn- lte? [x y]
-  (not (gt? x y)))
-
-(defn- eq? [x y]
-  (zero? (compare x y)))
-
-(declare smart-insert-helper)
-
-(declare smart-member-helper)
-
 (defrecord UnbalancedSet [left value right]
   Set
   (is-empty? [_] false)
-  (is-member? [{a :left y :value b :right :as this} x]
+  (is-member? [{a :left y :value b :right} x]
     (cond
       (lt? x y) (is-member? a x)
       (gt? x y) (is-member? b x)
@@ -31,24 +15,13 @@
     (cond
       (lt? x y) (->UnbalancedSet (insert a x) y b)
       (gt? x y) (->UnbalancedSet a y (insert b x))
-      :equal this))
-  SmartSet
-  (smart-insert [this x]
-    (try
-      (smart-insert-helper this x nil)
-      (catch IllegalArgumentException iae this)))
-  (smart-member? [this x]
-    (smart-member-helper this x nil)))
+      :equal this)))
 
 (extend-type nil
   Set
   (is-empty? [_] true)
   (is-member? [_ _] false)
   (insert [_ x]
-    (->UnbalancedSet nil x nil))
-  SmartSet
-  (smart-member? [_ _] false)
-  (smart-insert [_ x]
     (->UnbalancedSet nil x nil)))
 
 ;exercise 2.2
@@ -58,12 +31,20 @@
     (lte? x y) (recur a x y)
     :default (recur b x max)))
 
+(defn smart-member? [s x]
+  (smart-member-helper s x nil))
+
 ;exercise 2.3 and 2.4
 (defn- smart-insert-helper [{a :left y :value b :right :as tree} x max]
   (cond
     (is-empty? tree) (if (= x max) (throw (IllegalArgumentException. (str x " is already in the set"))) (insert tree x))
     (lte? x y) (->UnbalancedSet (smart-insert-helper a x y) y b)
     :default (->UnbalancedSet a y (smart-insert-helper b x max))))
+
+(defn smart-insert [s x]
+  (try
+    (smart-insert-helper s x nil)
+    (catch IllegalArgumentException iae s)))
 
 ;exercise 2.5
 ;a)
