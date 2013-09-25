@@ -154,5 +154,4 @@
           keys)
         doall)
       (is (thrown-with-msg? Exception #"NotFound" (lookup f-map -1)))
-      (is (thrown-with-msg? Exception #"NotFound" (lookup f-map 2)))
-      )))
+      (is (thrown-with-msg? Exception #"NotFound" (lookup f-map 2))))))

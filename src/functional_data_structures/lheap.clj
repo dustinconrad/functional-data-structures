@@ -38,6 +38,7 @@
     (->LeftistHeap (inc (rank b)) x a b)
     (->LeftistHeap (inc (rank a)) x b a)))
 
+; exercise 3.2
 (defn smart-insert [{v :value l :left r :right :as h} x]
   (cond
     (is-empty? h) (->LeftistHeap 1 x nil nil)
@@ -45,8 +46,9 @@
     (lt? (rank r) (rank l)) (make-t v l (smart-insert r x))
     :default (make-t v (smart-insert l x) r)))
 
+;exercise 3.3
 (defn from-seq [seq]
-  (let [heaps (map #(make-t 1 % nil nil) seq)]
+  (let [heaps (map #(->LeftistHeap 1 % nil nil) seq)]
     (loop [hs heaps]
       (if (= (count hs) 1)
         (first hs)
@@ -54,11 +56,3 @@
           (map
             (fn [[l r]] (merge-heap l r))
             (partition 2 2 [nil] hs)))))))
-
-(->>
-  (list -4916 3813 -543)
-  (reduce
-    smart-insert
-    nil)
-  (iterate #(do (println %) (delete-min %)))
-  (take 3))
