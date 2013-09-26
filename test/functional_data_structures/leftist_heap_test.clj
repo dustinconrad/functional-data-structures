@@ -1,7 +1,7 @@
-(ns functional-data-structures.lheap-test
+(ns functional-data-structures.leftist-heap-test
   (:require [clojure.test :refer :all ]
             [functional-data-structures.heap :refer :all ]
-            [functional-data-structures.lheap :refer :all ]))
+            [functional-data-structures.leftist-heap :refer :all ]))
 
 (defn make-lheap
   ([value]

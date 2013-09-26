@@ -1,4 +1,4 @@
-(ns functional-data-structures.lheap
+(ns functional-data-structures.leftist-heap
   (:require [functional-data-structures.heap :refer :all ]
             [functional-data-structures.compare :refer :all ]))
 
