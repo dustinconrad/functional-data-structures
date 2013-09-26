@@ -4,7 +4,6 @@
 
 (declare make-t)
 
-;chapter 3.1
 (defrecord WeightBiasedLeftistHeap [weight value left right]
   Heap
   (is-empty? [_] false)
@@ -30,29 +29,13 @@
   (find-min [_] (throw (AssertionError. "Cannot find-min of an empty heap")))
   (delete-min [_] (throw (AssertionError. "Cannot delete-min of an empty heap"))))
 
-(defn rank [{w :weight :as h}]
+(defn weight [{w :weight :as h}]
   (if (is-empty? h) 0 w))
 
 (defn make-t [x a b]
-  (if (gte? (rank a) (rank b))
-    (->LeftistHeap (inc (rank b)) x a b)
-    (->LeftistHeap (inc (rank a)) x b a)))
-
-; exercise 3.2
-(defn smart-insert [{v :value l :left r :right :as h} x]
-  (cond
-    (is-empty? h) (->LeftistHeap 1 x nil nil)
-    (lt? x v) (smart-insert (make-t x l r) v)
-    (lt? (rank r) (rank l)) (make-t v l (smart-insert r x))
-    :default (make-t v (smart-insert l x) r)))
-
-;exercise 3.3
-(defn from-seq [seq]
-  (let [heaps (map #(->LeftistHeap 1 % nil nil) seq)]
-    (loop [hs heaps]
-      (if (= (count hs) 1)
-        (first hs)
-        (recur
-          (map
-            (fn [[l r]] (merge-heap l r))
-            (partition 2 2 [nil] hs)))))))
+  (let [wa (weight a)
+        wb (weight b)
+        wt (+ 1 wa wb)]
+    (if (gte? wa wb)
+      (->WeightBiasedLeftistHeap wt x a b)
+      (->WeightBiasedLeftistHeap wt x b a))))
