@@ -29,9 +29,7 @@
     (let [one-level (make-lheap 1)
           expected (make-t 0 (make-lheap 1) nil)
           actual (insert one-level 0)]
-      (is (= actual expected)))
-    )
-  )
+      (is (= actual expected)))))
 
 (deftest test-smart-insert
   (testing "smart insert into empty leftist heap"
@@ -46,9 +44,7 @@
     (let [one-level (make-lheap 1)
           expected (make-t 0 (make-lheap 1) nil)
           actual (smart-insert one-level 0)]
-      (is (= actual expected)))
-    )
-  )
+      (is (= actual expected)))))
 
 (deftest test-find-min
   (testing "find min of rank 1 leftist heap"

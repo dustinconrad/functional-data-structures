@@ -6,28 +6,23 @@
 
 (defrecord WeightBiasedLeftistHeap [weight value left right]
   Heap
-  (is-empty? [_] false)
+  (is-empty? [h] (= h (->WeightBiasedLeftistHeap 0 nil nil nil)))
   (insert [h x]
     (merge-heap h (->WeightBiasedLeftistHeap 1 x nil nil)))
   (merge-heap [{x :value a1 :left b1 :right :as h1} {y :value a2 :left b2 :right :as h2}]
     (cond
+      (is-empty? h1) h2
       (is-empty? h2) h1
       (lte? x y) (make-t x a1 (merge-heap b1 h2))
       :else (make-t y a2 (merge-heap b2 h1))))
-  (find-min [{x :value a :left b :right}]
-    x)
-  (delete-min [{x :value a :left b :right}]
-    (merge-heap a b)))
-
-(extend-type nil
-  Heap
-  (is-empty? [_] true)
-  (insert [_ x]
-    (->WeightBiasedLeftistHeap 1 x nil nil))
-  (merge-heap [_ h2]
-    h2)
-  (find-min [_] (throw (AssertionError. "Cannot find-min of an empty heap")))
-  (delete-min [_] (throw (AssertionError. "Cannot delete-min of an empty heap"))))
+  (find-min [{x :value a :left b :right :as h}]
+    (if (is-empty? h)
+      (throw (AssertionError. "Cannot find-min of an empty heap"))
+      x))
+  (delete-min [{x :value a :left b :right :as h}]
+    (if (is-empty? h)
+      (throw (AssertionError. "Cannot find-min of an empty heap"))
+      (merge-heap a b))))
 
 (defn weight [{w :weight :as h}]
   (if (is-empty? h) 0 w))
@@ -39,3 +34,7 @@
     (if (gte? wa wb)
       (->WeightBiasedLeftistHeap wt x a b)
       (->WeightBiasedLeftistHeap wt x b a))))
+
+(defn weight-biased-leftist-heap
+  ([] (->WeightBiasedLeftistHeap 0 nil nil nil))
+  ([x] (->WeightBiasedLeftistHeap 1 x nil nil)))
