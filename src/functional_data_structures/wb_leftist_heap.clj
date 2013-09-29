@@ -3,7 +3,11 @@
             [functional-data-structures.compare :refer :all ]))
 
 (declare make-t)
-; exercise 3.4
+
+(defn get-weight [{w :weight :as h}]
+  (if (is-empty? h) 0 w))
+
+; exercise 3.4 and 3.4 c)
 (defrecord WeightBiasedLeftistHeap [weight value left right]
   Heap
   (is-empty? [h] (= h (->WeightBiasedLeftistHeap 0 nil nil nil)))
@@ -13,23 +17,32 @@
     (cond
       (is-empty? h1) h2
       (is-empty? h2) h1
-      (lte? x y) (make-t x a1 (merge-heap b1 h2))
-      :else (make-t y a2 (merge-heap b2 h1))))
+      (lte? x y) (let [merged (merge-heap b1 h2)
+                       wm (get-weight a1)
+                       wb (get-weight merged)
+                       wt (+ 1 wm wb)]
+                   (if (gte? wm wb)
+                     (->WeightBiasedLeftistHeap wt x a1 merged)
+                     (->WeightBiasedLeftistHeap wt x merged a1)))
+      :else (let [merged (merge-heap b2 h1)
+                  wa (get-weight a2)
+                  wm (get-weight merged)
+                  wt (+ 1 wa wm)]
+              (if (gte? wa wm)
+                (->WeightBiasedLeftistHeap wt y a2 merged)
+                (->WeightBiasedLeftistHeap wt y merged a2)))))
   (find-min [{x :value a :left b :right :as h}]
     (if (is-empty? h)
       (throw (AssertionError. "Cannot find-min of an empty heap"))
       x))
   (delete-min [{x :value a :left b :right :as h}]
     (if (is-empty? h)
-      (throw (AssertionError. "Cannot find-min of an empty heap"))
+      (throw (AssertionError. "Cannot delete-min of an empty heap"))
       (merge-heap a b))))
 
-(defn weight [{w :weight :as h}]
-  (if (is-empty? h) 0 w))
-
 (defn make-t [x a b]
-  (let [wa (weight a)
-        wb (weight b)
+  (let [wa (get-weight a)
+        wb (get-weight b)
         wt (+ 1 wa wb)]
     (if (gte? wa wb)
       (->WeightBiasedLeftistHeap wt x a b)
@@ -40,7 +53,7 @@
   (cond
     (is-empty? h) (->WeightBiasedLeftistHeap 1 x (->WeightBiasedLeftistHeap 0 nil nil nil) (->WeightBiasedLeftistHeap 0 nil nil nil))
     (lt? x v) (smart-insert (make-t x l r) v)
-    (lt? (weight r) (weight l)) (make-t v l (smart-insert r x))
+    (lt? (get-weight r) (get-weight l)) (make-t v l (smart-insert r x))
     :default (make-t v (smart-insert l x) r)))
 
 (defn weight-biased-leftist-heap
