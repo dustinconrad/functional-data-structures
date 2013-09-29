@@ -90,8 +90,7 @@
               nil)
             (#(is (= (apply min c) (find-min %))))
             )))
-      doall))
-  )
+      doall)))
 
 (deftest test-delete-min
   (testing "delete min of rank 1 leftist heap"

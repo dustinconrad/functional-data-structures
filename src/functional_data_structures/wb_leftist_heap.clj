@@ -3,12 +3,12 @@
             [functional-data-structures.compare :refer :all ]))
 
 (declare make-t)
-
+; exercise 3.4
 (defrecord WeightBiasedLeftistHeap [weight value left right]
   Heap
   (is-empty? [h] (= h (->WeightBiasedLeftistHeap 0 nil nil nil)))
   (insert [h x]
-    (merge-heap h (->WeightBiasedLeftistHeap 1 x nil nil)))
+    (merge-heap h (->WeightBiasedLeftistHeap 1 x (->WeightBiasedLeftistHeap 0 nil nil nil) (->WeightBiasedLeftistHeap 0 nil nil nil))))
   (merge-heap [{x :value a1 :left b1 :right :as h1} {y :value a2 :left b2 :right :as h2}]
     (cond
       (is-empty? h1) h2
@@ -35,6 +35,14 @@
       (->WeightBiasedLeftistHeap wt x a b)
       (->WeightBiasedLeftistHeap wt x b a))))
 
+; exercise 3.4 b)
+(defn smart-insert [{v :value l :left r :right :as h} x]
+  (cond
+    (is-empty? h) (->WeightBiasedLeftistHeap 1 x (->WeightBiasedLeftistHeap 0 nil nil nil) (->WeightBiasedLeftistHeap 0 nil nil nil))
+    (lt? x v) (smart-insert (make-t x l r) v)
+    (lt? (weight r) (weight l)) (make-t v l (smart-insert r x))
+    :default (make-t v (smart-insert l x) r)))
+
 (defn weight-biased-leftist-heap
   ([] (->WeightBiasedLeftistHeap 0 nil nil nil))
-  ([x] (->WeightBiasedLeftistHeap 1 x nil nil)))
+  ([x] (->WeightBiasedLeftistHeap 1 x (weight-biased-leftist-heap) (weight-biased-leftist-heap))))
