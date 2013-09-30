@@ -37,7 +37,7 @@
 ;exercise 2.3 and 2.4
 (defn- smart-insert-helper [{a :left y :value b :right :as tree} x max]
   (cond
-    (is-empty? tree) (if (= x max) (throw (IllegalArgumentException. (str x " is already in the set"))) (insert tree x))
+    (is-empty? tree) (if (eq? x max) (throw (IllegalArgumentException. (str x " is already in the set"))) (insert tree x))
     (lte? x y) (->UnbalancedSet (smart-insert-helper a x y) y b)
     :default (->UnbalancedSet a y (smart-insert-helper b x max))))
 
@@ -56,7 +56,7 @@
 ;b)
 (defn- create-helper [min max]
   (cond
-    (>= min max) nil
+    (gte? min max) nil
     :default (let [mid (quot (+ min max) 2)]
                (->UnbalancedSet
                  (create-helper min mid)

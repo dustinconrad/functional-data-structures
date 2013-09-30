@@ -1,6 +1,6 @@
-(ns functional-data-structures.bheap-test
+(ns functional-data-structures.binomial-heap-test
   (:require [clojure.test :refer :all ]
-            [functional-data-structures.bheap :refer :all ]))
+            [functional-data-structures.binomial-heap :refer :all ]))
 
 (deftest test-link
   (testing "test rank 0"

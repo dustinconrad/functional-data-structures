@@ -34,7 +34,7 @@
   (if (is-empty? h) 0 r))
 
 (defn make-t [x a b]
-  (if (gte? (rank a) (rank b))
+  (if (>= (rank a) (rank b))
     (->LeftistHeap (inc (rank b)) x a b)
     (->LeftistHeap (inc (rank a)) x b a)))
 
