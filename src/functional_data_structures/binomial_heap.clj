@@ -10,11 +10,11 @@
     (->BinomialTree (inc r1) x1 (cons t2 c1))
     (->BinomialTree (inc r1) x2 (cons t1 c2))))
 
-(defn make-node 
+(defn binomial-tree
   ([value]
-    (make-node 0 value nil))
+    (binomial-tree 0 value nil))
   ([rank value children]
-    {:rank rank :value value :children children}))
+    (->BinomialTree rank value children)))
 
 (defn rank [{r :rank x :value c :children}]
   r)
@@ -23,11 +23,20 @@
   (cond
     (empty? ts) (list t)
     (< (rank t) (rank t-prime)) (cons t ts)
-    :else (ins-tree ts-prime (link t t-prime))
-    ))
+    :else (ins-tree ts-prime (link t t-prime))))
+
+(defrecord BinomialHeap [tree-list]
+  Heap
+  (is-empty? [h]
+    (empty? tree-list))
+  (insert [h x]
+    )
+  (merge-heap [hl hr])
+  (find-min [h])
+  (delete-min [h]))
 
 (defn insert [ts x]
-  (ins-tree ts (make-node x)))
+  (ins-tree ts (binomial-tree x)))
 
 (defn merge-bheap [[t1 & ts1-prime :as ts1] [t2 & ts2-prime :as ts2]]
   (cond 
