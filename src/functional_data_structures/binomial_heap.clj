@@ -25,27 +25,16 @@
     (< (rank t) (rank t-prime)) (cons t ts)
     :else (ins-tree ts-prime (link t t-prime))))
 
-(defrecord BinomialHeap [tree-list]
-  Heap
-  (is-empty? [h]
-    (empty? tree-list))
-  (insert [h x]
-    )
-  (merge-heap [hl hr])
-  (find-min [h])
-  (delete-min [h]))
+(defn insert-helper [ts x]
+  (ins-tree ts (->BinomialTree 0 x nil)))
 
-(defn insert [ts x]
-  (ins-tree ts (binomial-tree x)))
-
-(defn merge-bheap [[t1 & ts1-prime :as ts1] [t2 & ts2-prime :as ts2]]
-  (cond 
+(defn merge-heap-helper [[t1 & ts1-prime :as ts1] [t2 & ts2-prime :as ts2]]
+  (cond
     (empty? ts2) ts1
     (empty? ts1) ts2
-    (< (rank t1) (rank t2)) (cons t1 (merge-bheap ts1-prime ts2))
-    (< (rank t2) (rank t1)) (cons t2 (merge-bheap ts2-prime ts1))
-    :default (ins-tree (merge-bheap ts1-prime ts2-prime) (link t1 t2))
-    ))
+    (< (rank t1) (rank t2)) (cons t1 (merge-heap-helper ts1-prime ts2))
+    (< (rank t2) (rank t1)) (cons t2 (merge-heap-helper ts2-prime ts1))
+    :default (ins-tree (merge-heap-helper ts1-prime ts2-prime) (link t1 t2))))
 
 (defn remove-min-tree [[t & ts :as tee]]
   {:pre ((complement empty?) tee)}
@@ -56,9 +45,24 @@
         [t ts]
         [t-prime (cons t ts-prime)]))))
 
-(defn find-min [ts]
-  (let [[t _] (remove-min-tree ts)]
-    (:value t)))
+(defrecord BinomialHeap [ts]
+  Heap
+  (is-empty? [this]
+    (empty? ts))
+  (insert [this x]
+    (->BinomialHeap (insert-helper ts x)))
+  (merge-heap [this {o :ts}]
+    (->BinomialHeap (merge-heap-helper ts o)))
+  (find-min [this]
+    (let [[t _] (remove-min-tree ts)]
+      (:value t)))
+  (delete-min [this]
+    (let [[{x :value ts1 :children} ts2] (remove-min-tree ts)]
+      (merge-heap (reverse ts1) ts2))))
+
+(defn binomial-heap
+  ([] (->BinomialHeap nil))
+  ([x] (->BinomialHeap x)))
 
 (defn find-min-direct [[{tv :value :as t} & ts :as tee]]
   {:pre ((complement empty?) tee)}
@@ -68,7 +72,3 @@
       (if (<= tv tv-prime)
         tv
         tv-prime))))
-
-(defn delete-min [ts]
-  (let [[{x :value ts1 :children} ts2] (remove-min-tree ts)]
-    (merge-bheap (reverse ts1) ts2)))
