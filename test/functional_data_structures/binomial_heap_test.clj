@@ -33,8 +33,8 @@
     (let [one (insert (binomial-heap) 10)
           two (insert one 20)
           inserted (insert two 1)]
-      (is (= (binomial-tree 1) (first inserted)))
-      (is (not-empty (rest inserted)))))
+      (is (= (binomial-tree 1) (first (:ts inserted))))
+      (is (not-empty (rest (:ts inserted))))))
   (testing "insert into middle"
     (let [one (insert (binomial-heap) 10)
           two (insert one 20)

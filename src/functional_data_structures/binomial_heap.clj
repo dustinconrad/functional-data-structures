@@ -37,7 +37,7 @@
     :default (ins-tree (merge-heap-helper ts1-prime ts2-prime) (link t1 t2))))
 
 (defn remove-min-tree [[t & ts :as tee]]
-  {:pre ((complement empty?) tee)}
+  {:pre (not-empty tee)}
   (if (empty? ts)
     [t ts]
     (let [[t-prime ts-prime] (remove-min-tree ts)]
@@ -64,11 +64,14 @@
   ([] (->BinomialHeap nil))
   ([x] (->BinomialHeap x)))
 
-(defn find-min-direct [[{tv :value :as t} & ts :as tee]]
-  {:pre ((complement empty?) tee)}
+(defn find-min-direct-helper [[{tv :value} & ts :as tee]]
+  {:pre (not-empty tee)}
   (if (empty? ts)
     tv
-    (let [tv-prime (find-min-direct ts)]
-      (if (<= tv tv-prime)
+    (let [tv-prime (find-min-direct-helper ts)]
+      (if (lte? tv tv-prime)
         tv
         tv-prime))))
+
+(defn find-min-direct [h]
+  (find-min-direct-helper (:ts h)))
