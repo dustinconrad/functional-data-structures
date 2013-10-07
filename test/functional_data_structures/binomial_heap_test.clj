@@ -7,43 +7,41 @@
   (testing "test rank 0"
     (let [first (binomial-tree 5)
           second (binomial-tree 4)
-          expected (binomial-tree 1 4 (list (binomial-tree 0 5 nil)))]
+          expected (binomial-tree 1 4 (list (binomial-tree 5)))]
       (is (= (link first second) expected))
       (is (= (link second first) expected))))
   (testing "exception "
     (let [first (binomial-tree 5)
           second (binomial-tree 4)
-          expected {:rank 1 :value 4 :children '({:rank 0 :value 5 :children nil})}]
+          expected (binomial-tree 1 4 (list (binomial-tree 5)))]
     (is (thrown? AssertionError (link expected first)))
     (is (thrown? AssertionError (link first expected)))))
   (testing "test rank 1"
-    (let [first {:rank 1 :value 1 :children '({:rank 0 :value 3 :children nil})}
-          second {:rank 1 :value 5 :children '({:rank 0 :value 7 :children nil})}
-          expected {:rank 2 :value 1 :children
-                    '( {:rank 1 :value 5 :children ({:rank 0 :value 7 :children nil})}
-                       {:rank 0 :value 3 :children nil})}]
+    (let [first (binomial-tree 1 1 (list (binomial-tree 3)))
+          second (binomial-tree 1 5 (list (binomial-tree 7)))
+          expected (binomial-tree 2 1
+                     (list
+                       (binomial-tree 1 5 (list (binomial-tree 7)))
+                       (binomial-tree 3)))]
       (is (= (link first second) expected))
-      (is (= (link second first) expected))))
-   )
+      (is (= (link second first) expected)))))
 
 (deftest test-insert
   (testing "insert into empty"
-    (is (= (binomial-heap (list 1)) (insert (binomial-heap) 1))))
+    (is (= (binomial-heap (list (binomial-tree 1))) (insert (binomial-heap) 1))))
   (testing "insert into front"
-    (let [one (insert nil 10)
+    (let [one (insert (binomial-heap) 10)
           two (insert one 20)
           inserted (insert two 1)]
       (is (= (binomial-tree 1) (first inserted)))
-      (is (not-empty (rest inserted)))
-      ))
+      (is (not-empty (rest inserted)))))
   (testing "insert into middle"
-    (let [one (insert nil 10)
+    (let [one (insert (binomial-heap) 10)
           two (insert one 20)
           one-two (insert two 5)
           three (insert one-two 1)]
       (is (empty? (rest three)))
-      (is ((complement nil?) (first three)))
-      )))
+      (is ((complement nil?) (first three))))))
 
 (deftest test-merge
   (testing "empty merge"
@@ -71,15 +69,15 @@
 
 (deftest test-find-min
   (testing "find min of size 1 binomial heap"
-    (let [bheap (insert nil 1)]
+    (let [bheap (insert (binomial-heap) 1)]
       (is (= (find-min bheap) 1))))
   (testing "find min of binomial heap"
-    (let [bheap (-> nil (insert 1) (insert 2))]
+    (let [bheap (-> (binomial-heap) (insert 1) (insert 2))]
       (is (= (find-min bheap) 1)))
-    (let [bheap (-> nil (insert 1) (insert 0))]
+    (let [bheap (-> (binomial-heap) (insert 1) (insert 0))]
       (is (= (find-min bheap) 0))))
   (testing "exception"
-    (is (thrown? AssertionError (find-min nil))))
+    (is (thrown? AssertionError (find-min (binomial-heap)))))
   (testing "multiple inserts and find min"
     (->>
       (repeatedly 10 (fn [] (repeatedly 10 #(- 5000 (rand-int 10000)))))
@@ -88,7 +86,7 @@
           (->> c
             (reduce
               insert
-              nil)
+              (binomial-heap))
             (#(is (= (apply min c) (find-min %))))
             )))
       doall))
@@ -96,15 +94,15 @@
 
 (deftest test-find-direct
   (testing "find min direct of size 1 binomial heap"
-    (let [bheap (insert nil 1)]
+    (let [bheap (insert (binomial-heap) 1)]
       (is (= (find-min-direct bheap) 1))))
   (testing "find min direct of binomial heap"
-    (let [bheap (-> nil (insert 1) (insert 2))]
+    (let [bheap (-> (binomial-heap) (insert 1) (insert 2))]
       (is (= (find-min-direct bheap) 1)))
-    (let [bheap (-> nil (insert 1) (insert 0))]
+    (let [bheap (-> (binomial-heap) (insert 1) (insert 0))]
       (is (= (find-min-direct bheap) 0))))
   (testing "exception"
-    (is (thrown? AssertionError (find-min-direct nil))))
+    (is (thrown? AssertionError (find-min-direct (binomial-heap)))))
   (testing "multiple inserts and find min direct"
     (->>
       (repeatedly 10 (fn [] (repeatedly 10 #(- 5000 (rand-int 10000)))))
@@ -113,7 +111,7 @@
           (->> c
             (reduce
               insert
-              nil)
+              (binomial-heap))
             (#(is (= (apply min c) (find-min-direct %))))
             )))
       doall))

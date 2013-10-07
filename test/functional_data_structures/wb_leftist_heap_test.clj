@@ -63,7 +63,7 @@
           old-min (find-min lheap)]
       (is (not= old-min (find-min (delete-min lheap))))))
   (testing "exception"
-    (is (thrown? AssertionError (delete-min nil))))
+    (is (thrown? AssertionError (delete-min (weight-biased-leftist-heap)))))
   (testing "multiple inserts and find/delete min"
     (->>
       (repeatedly 10 (fn [] (repeatedly 10 #(- 5000 (rand-int 10000)))))
