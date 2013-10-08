@@ -59,7 +59,7 @@
     (->BinomialHeap (merge-heap-helper ts o)))
   (find-min [this]
     (let [[t _] (remove-min-tree ts)]
-      (:value t)))
+      (:value (:tree t))))
   (delete-min [this]
     (let [[{x :value ts1 :children} ts2] (remove-min-tree ts)]
       (merge-heap (reverse ts1) ts2))))

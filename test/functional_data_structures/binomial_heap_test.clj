@@ -87,7 +87,7 @@
             (reduce
               insert
               (binomial-heap))
-            (#(is (= (apply min c) (find-min %))))
+            (#(do (println c) (println %) (is (= (apply min c) (find-min %)))))
             )))
       doall)))
 
