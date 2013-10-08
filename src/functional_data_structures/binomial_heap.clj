@@ -45,7 +45,7 @@
   (if (empty? ts)
     [t ts]
     (let [[t-prime ts-prime] (remove-min-tree ts)]
-      (if (lte? (:value t) (:value t-prime))
+      (if (lte? (:value (:tree t)) (:value (:tree t-prime)))
         [t ts]
         [t-prime (cons t ts-prime)]))))
 
