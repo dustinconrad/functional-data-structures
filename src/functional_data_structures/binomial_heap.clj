@@ -2,21 +2,25 @@
   (:require [functional-data-structures.heap :refer :all ]
             [functional-data-structures.compare :refer :all ]))
 
-(defrecord BinomialTree [rank value children])
+;Chapter 3.2
+(defrecord BinomialTree [rank tree])
 
-(defn link [{r1 :rank x1 :value c1 :children :as t1} {r2 :rank x2 :value c2 :children :as t2}]
+;Chapter 3.6
+(defrecord Tree [value children])
+
+(defn link [{r1 :rank {x1 :value c1 :children :as t1} :tree} {r2 :rank {x2 :value c2 :children :as t2} :tree}]
   {:pre [(eq? r1 r2)]}
   (if (lte? x1 x2)
-    (->BinomialTree (inc r1) x1 (cons t2 c1))
-    (->BinomialTree (inc r1) x2 (cons t1 c2))))
+    (->BinomialTree (inc r1) (->Tree x1 (cons t2 c1)))
+    (->BinomialTree (inc r1) (->Tree x2 (cons t1 c2)))))
 
 (defn binomial-tree
   ([value]
     (binomial-tree 0 value nil))
   ([rank value children]
-    (->BinomialTree rank value children)))
+    (->BinomialTree rank (->Tree value children))))
 
-(defn rank [{r :rank x :value c :children}]
+(defn rank [{r :rank}]
   r)
 
 (defn ins-tree [[t-prime & ts-prime :as ts] t]
@@ -26,7 +30,7 @@
     :else (ins-tree ts-prime (link t t-prime))))
 
 (defn insert-helper [ts x]
-  (ins-tree ts (->BinomialTree 0 x nil)))
+  (ins-tree ts (->BinomialTree 0 (->Tree x nil))))
 
 (defn merge-heap-helper [[t1 & ts1-prime :as ts1] [t2 & ts2-prime :as ts2]]
   (cond
@@ -41,7 +45,7 @@
   (if (empty? ts)
     [t ts]
     (let [[t-prime ts-prime] (remove-min-tree ts)]
-      (if (<= (:value t) (:value t-prime))
+      (if (lte? (:value t) (:value t-prime))
         [t ts]
         [t-prime (cons t ts-prime)]))))
 
@@ -64,7 +68,8 @@
   ([] (->BinomialHeap nil))
   ([x] (->BinomialHeap x)))
 
-(defn find-min-direct-helper [[{tv :value} & ts :as tee]]
+;exercise 3.5
+(defn find-min-direct-helper [[{{tv :value} :tree} & ts :as tee]]
   {:pre (not-empty tee)}
   (if (empty? ts)
     tv

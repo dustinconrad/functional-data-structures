@@ -7,7 +7,7 @@
   (testing "test rank 0"
     (let [first (binomial-tree 5)
           second (binomial-tree 4)
-          expected (binomial-tree 1 4 (list (binomial-tree 5)))]
+          expected (binomial-tree 1 4 (list (->Tree 5 nil)))]
       (is (= (link first second) expected))
       (is (= (link second first) expected))))
   (testing "exception "
@@ -17,12 +17,12 @@
     (is (thrown? AssertionError (link expected first)))
     (is (thrown? AssertionError (link first expected)))))
   (testing "test rank 1"
-    (let [first (binomial-tree 1 1 (list (binomial-tree 3)))
-          second (binomial-tree 1 5 (list (binomial-tree 7)))
+    (let [first (binomial-tree 1 1 (list (->Tree 3 nil)))
+          second (binomial-tree 1 5 (list (->Tree 7 nil)))
           expected (binomial-tree 2 1
                      (list
-                       (binomial-tree 1 5 (list (binomial-tree 7)))
-                       (binomial-tree 3)))]
+                       (->Tree 5 (list (->Tree 7 nil)))
+                       (->Tree 3 nil)))]
       (is (= (link first second) expected))
       (is (= (link second first) expected)))))
 
@@ -89,8 +89,7 @@
               (binomial-heap))
             (#(is (= (apply min c) (find-min %))))
             )))
-      doall))
-  )
+      doall)))
 
 (deftest test-find-direct
   (testing "find min direct of size 1 binomial heap"
@@ -114,8 +113,7 @@
               (binomial-heap))
             (#(is (= (apply min c) (find-min-direct %))))
             )))
-      doall))
-  )
+      doall)))
 
 (deftest test-delete-min
   (testing "delete min of size 1 binomial heap"
