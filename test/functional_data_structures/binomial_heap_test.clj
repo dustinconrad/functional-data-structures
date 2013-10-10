@@ -87,8 +87,7 @@
             (reduce
               insert
               (binomial-heap))
-            (#(is (= (apply min c) (find-min %))))
-            )))
+            (#(is (= (apply min c) (find-min %)))))))
       doall)))
 
 (deftest test-find-direct
