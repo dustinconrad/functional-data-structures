@@ -22,9 +22,14 @@
       (throw (AssertionError. "Cannot find-min of an empty heap"))
       min))
   (delete-min [this]
-    (let [deleted (delete-min heap)]
-      (->ExplicitMinHeap
-        deleted
-        (try
-          (find-min deleted)
-          (catch AssertionError ae nil))))))
+    (if (is-empty? heap)
+      (throw (AssertionError. "Cannot delete-min of an empty heap"))
+      (let [deleted (delete-min heap)]
+        (->ExplicitMinHeap
+          deleted
+          (try
+            (find-min deleted)
+            (catch AssertionError ae nil)))))))
+
+(defn explicit-min-heap [h]
+  (->ExplicitMinHeap h nil))
