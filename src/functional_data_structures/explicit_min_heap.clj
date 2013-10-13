@@ -1,5 +1,6 @@
 (ns functional-data-structures.explicit-min-heap
-  (:require [functional-data-structures.heap :refer :all ]))
+  (:require [functional-data-structures.heap :refer :all]
+            [functional-data-structures.compare :refer :all]))
 
 (defrecord ExplicitMinHeap [heap min]
   Heap

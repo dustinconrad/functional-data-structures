@@ -136,7 +136,7 @@
           (->> c
             (reduce
               insert
-              nil)
+              (binomial-heap))
             (iterate delete-min)
             (take (count c))
             (map find-min)

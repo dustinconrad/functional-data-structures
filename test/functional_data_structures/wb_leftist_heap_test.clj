@@ -4,7 +4,7 @@
             [functional-data-structures.wb-leftist-heap :refer :all ]))
 
 (deftest test-make-lheap
-  (testing "make a weight biased leftist heap with the auto-swapping based on rank logic"
+  (testing "make a weight biased leftist heap with the auto-swapping based on weight logic"
     (let [two-level (make-t 9 (weight-biased-leftist-heap 10) (weight-biased-leftist-heap 11))
           three-level (make-t 0 (weight-biased-leftist-heap 1) two-level)]
       (is (= (:right three-level) (weight-biased-leftist-heap 1)))

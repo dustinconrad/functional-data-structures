@@ -61,8 +61,14 @@
     (let [[t _] (remove-min-tree ts)]
       (:value (:tree t))))
   (delete-min [this]
-    (let [[{x :value ts1 :children} ts2] (remove-min-tree ts)]
-      (merge-heap (reverse ts1) ts2))))
+    (->BinomialHeap
+      (let [[{r :rank t :tree} ts2] (remove-min-tree ts)]
+        (merge-heap-helper
+          (map
+            #(->BinomialTree %1 %2)
+            (range r)
+            (reverse (:children t)))
+          ts2)))))
 
 (defn binomial-heap
   ([] (->BinomialHeap nil))
