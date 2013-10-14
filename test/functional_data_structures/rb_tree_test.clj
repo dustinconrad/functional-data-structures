@@ -1,16 +1,17 @@
 (ns functional-data-structures.rb-tree-test
-  (:require [clojure.test :refer :all ]
+  (:require [clojure.test :refer :all]
+            [functional-data-structures.set :refer :all]
             [functional-data-structures.rb-tree :refer :all ]))
 
 (defn black? [node]
-  (or (empty? node) (= :B (:color node))))
+  (or (is-empty? node) (= :B (:color node))))
 
 (defn red? [node]
   (= :R (:color node)))
 
 (defn verify-rb-tree [{color :color left :left value :value right :right :as tree}]
   (cond
-    (empty? tree) 0
+    (is-empty? tree) 0
     (and (red? tree) (or (red? left) (red? right))) (throw (IllegalStateException. "Red-Black tree invariant violated: Red node with red child"))
     :else (let [left-count (verify-rb-tree left)
                 right-count (verify-rb-tree right)
@@ -21,23 +22,23 @@
 
 (deftest test-member?
   (testing "one level"
-    (let [one-level (make-rb-tree 1)]
+    (let [one-level (->RedBlackSet :R (->RedBlackSet :B nil nil nil) 1 (->RedBlackSet :B nil nil nil))]
       (is (= 0 (verify-rb-tree one-level)))
-      (is (member? one-level 1))
-      (is (not (member? one-level 2)))
-      (is (not (member? one-level -1)))))
+      (is (is-member? one-level 1))
+      (is (not (is-member? one-level 2)))
+      (is (not (is-member? one-level -1)))))
   (testing "two levels"
-    (let [two-level (make-rb-tree
+    (let [two-level (->RedBlackSet
                       :B
-                      (make-rb-tree 1)
+                      (->RedBlackSet :R (->RedBlackSet :B nil nil nil) 1 (->RedBlackSet :B nil nil nil))
                       2
-                      (make-rb-tree 3))]
+                      (->RedBlackSet :R (->RedBlackSet :B nil nil nil) 3 (->RedBlackSet :B nil nil nil)))]
       (is (= 1 (verify-rb-tree two-level)))
-      (is (member? two-level 1))
-      (is (member? two-level 2))
-      (is (member? two-level 3))
-      (is (not (member? two-level 4)))
-      (is (not (member? two-level -1))))
+      (is (is-member? two-level 1))
+      (is (is-member? two-level 2))
+      (is (is-member? two-level 3))
+      (is (not (is-member? two-level 4)))
+      (is (not (is-member? two-level -1))))
     ))
 
 (deftest test-insert-member?
@@ -50,11 +51,11 @@
             (do
               (doall
                 (map
-                  #(is (member? test-tree %))
+                  #(is (is-member? test-tree %))
                   (range i)))
               (is (verify-rb-tree test-tree))
-              (is (not (member? test-tree -10)))
-              (is (not (member? test-tree (inc i))))
+              (is (not (is-member? test-tree -10)))
+              (is (not (is-member? test-tree (inc i))))
               ))))
       doall)))
 
@@ -70,7 +71,7 @@
       (is (verify-rb-tree tree))
       (doall
         (map
-          #(is (member? tree %))
+          #(is (is-member? tree %))
           coll))))
   (testing "size two"
     (let [coll (range 2)
@@ -78,7 +79,7 @@
       (is (verify-rb-tree tree) (str tree))
       (doall
         (map
-          #(is (member? tree %))
+          #(is (is-member? tree %))
           coll))))
   (testing "size three"
     (let [coll (range 3)
@@ -86,7 +87,7 @@
       (is (verify-rb-tree tree))
       (doall
         (map
-          #(is (member? tree %))
+          #(is (is-member? tree %))
           coll))))
   (testing "size four"
     (let [coll (range 4)
@@ -94,7 +95,7 @@
       (is (verify-rb-tree tree) (str tree))
       (doall
         (map
-          #(is (member? tree %))
+          #(is (is-member? tree %))
           coll))))
   (testing "larger sizes"
     (->>
@@ -105,7 +106,7 @@
                 tree (from-ord-list coll)]
             (is (verify-rb-tree tree) (str "i:" i " tree: " tree ))
               (map
-                #(is (member? tree %))
+                #(is (is-member? tree %))
                 coll))))
       doall))
   )

@@ -2,6 +2,8 @@
   (:require [functional-data-structures.heap :refer :all]
             [functional-data-structures.compare :refer :all]))
 
+;exercise 3.7
+
 (defrecord ExplicitMinHeap [heap min]
   Heap
   (is-empty? [this]
