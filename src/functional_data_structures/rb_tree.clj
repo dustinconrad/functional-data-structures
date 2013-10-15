@@ -56,6 +56,7 @@
     (fol (log (count coll) 2) coll)))
 
 ;exercise 3.10
+;a)
 (defn lbalance [color left value right]
   (core/match [[color left value right]]
     [(:or [:B {:color :R , :left {:color :R , :left a, :value x, :right b},:value y, :right c} z d]
@@ -69,3 +70,6 @@
           [:B a x {:color :R , :left b, :value y, :right {:color :R , :left c, :value z, :right d}}])]
     (->RedBlackSet :R (->RedBlackSet :B a x b) y (->RedBlackSet :B c z d))
     :else (->RedBlackSet color left value right)))
+
+(defn red-black-set
+  ([] (->RedBlackSet :B nil nil nil)))

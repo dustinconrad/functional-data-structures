@@ -17,7 +17,7 @@
                 right-count (verify-rb-tree right)
                 current-value-count (if (black? tree) 1 0)]
             (if-not (= left-count right-count)
-              (throw (IllegalStateException. "Red-Black tree invariants violated: different number of black nodes to empty node"))
+              (throw (IllegalStateException. (str "Red-Black tree invariants violated: different number of black nodes to empty node (" left-count "," right-count ")")))
               (+ current-value-count left-count)))))
 
 (deftest test-member?
@@ -47,8 +47,7 @@
       (range 1 11)
       (map
         (fn [i]
-          (let [test-tree (reduce #(insert % %2) nil (shuffle (range i)))]
-            (do
+          (let [test-tree (reduce #(insert % %2) (red-black-set) (shuffle (range i)))]
               (doall
                 (map
                   #(is (is-member? test-tree %))
@@ -56,7 +55,7 @@
               (is (verify-rb-tree test-tree))
               (is (not (is-member? test-tree -10)))
               (is (not (is-member? test-tree (inc i))))
-              ))))
+              )))
       doall)))
 
 
@@ -108,5 +107,4 @@
               (map
                 #(is (is-member? tree %))
                 coll))))
-      doall))
-  )
+      doall)))
