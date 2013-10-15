@@ -25,6 +25,9 @@
           {a-prime :left y-prime :value b-prime :right} (ins s x)]
       (->RedBlackSet :B a-prime y-prime b-prime))))
 
+(defn red-black-set
+  ([] (->RedBlackSet :B nil nil nil)))
+
 (defn balance [color left value right]
   (core/match [[color left value right]]
     [(:or [:B {:color :R , :left {:color :R , :left a, :value x, :right b},:value y, :right c} z d]
@@ -43,8 +46,8 @@
               (let [color (if (< n 1) :R :B)]
                 (cond
                   (empty? coll) nil
-                  (= (count coll) 1) (->RedBlackSet color nil (first coll) nil)
-                  (= (count coll) 2) (->RedBlackSet color nil (first coll) (fol (dec n) (rest coll)))
+                  (= (count coll) 1) (->RedBlackSet color (red-black-set) (first coll) (red-black-set))
+                  (= (count coll) 2) (->RedBlackSet color (red-black-set) (first coll) (fol (dec n) (rest coll)))
                   :default (let [half (quot (count coll) 2)
                                  left (take half coll)
                                  mid (nth coll half)
@@ -70,6 +73,3 @@
           [:B a x {:color :R , :left b, :value y, :right {:color :R , :left c, :value z, :right d}}])]
     (->RedBlackSet :R (->RedBlackSet :B a x b) y (->RedBlackSet :B c z d))
     :else (->RedBlackSet color left value right)))
-
-(defn red-black-set
-  ([] (->RedBlackSet :B nil nil nil)))
